@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>控制台 (SETTINGS) - 黎梨 V35 卡片适配版</title>
+    <title>控制台 (SETTINGS) - 黎梨 V41 交互引擎版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -44,9 +44,9 @@
         .preview-thumb { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; border: 1px solid #414868; margin-left: 8px; display: none; } .preview-thumb.show { display: block; }
         .preview-audio-icon { color: #7aa2f7; margin-left: 8px; display: none; cursor: pointer; } .preview-audio-icon.show { display: block; }
         
-        /* V35: 翻转卡片核心样式 (Engine-Level Support) */
+        /* V40: Flip Card Engine Core */
         .lq-perspective-container { perspective: 1500px; width: 100%; max-width: 400px; margin: 0 auto; }
-        .lq-flip-card { width: 100%; background-color: transparent; cursor: pointer; position: relative; aspect-ratio: 3/5; } /* 使用宽高比适配 */
+        .lq-flip-card { width: 100%; background-color: transparent; cursor: pointer; position: relative; aspect-ratio: 3/5; }
         .lq-flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform-style: preserve-3d; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); border-radius: 12px; }
         .lq-flip-card.is-flipped .lq-flip-card-inner { transform: rotateY(180deg); }
         .lq-card-front, .lq-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; }
@@ -74,7 +74,7 @@
             <div class="grid grid-cols-3 gap-x-8 gap-y-6"><div class="key-btn" onclick="App.inputPin(1)">1</div><div class="key-btn" onclick="App.inputPin(2)">2</div><div class="key-btn" onclick="App.inputPin(3)">3</div><div class="key-btn" onclick="App.inputPin(4)">4</div><div class="key-btn" onclick="App.inputPin(5)">5</div><div class="key-btn" onclick="App.inputPin(6)">6</div><div class="key-btn" onclick="App.inputPin(7)">7</div><div class="key-btn" onclick="App.inputPin(8)">8</div><div class="key-btn" onclick="App.inputPin(9)">9</div><div class="key-btn text-xl" onclick="App.cancelPin()"><i class="fa-solid fa-arrow-left"></i></div><div class="key-btn" onclick="App.inputPin(0)">0</div><div class="key-btn text-xl" onclick="App.clearPin()"><i class="fa-solid fa-delete-left"></i></div></div>
             <div class="mt-12 text-white/40 text-[10px] tracking-[0.3em] font-serif">VERIFICATION REQUIRED</div>
         </div>
-        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50">SYSTEM V35.0 READY</div>
+        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50">SYSTEM V41.0 READY</div>
     </div>
 
     <div id="app-background"></div>
@@ -101,7 +101,6 @@
                 <div class="space-y-3"><div class="flex justify-between items-end"><label class="text-xs font-bold text-[#bb9af7] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders"></i> 高级预设</label></div><div class="relative bg-[#1f2335] p-2 rounded border border-[#292e42] flex gap-2"><label class="w-10 h-10 shrink-0 bg-[#2f334d] rounded-full relative overflow-hidden group cursor-pointer"><img id="img-user-avatar" class="w-full h-full object-cover hidden"><div id="ph-user-avatar" class="absolute inset-0 flex items-center justify-center text-[#7aa2f7]"><i class="fa-solid fa-user pointer-events-none"></i></div><input type="file" id="file-user-avatar" accept="image/*" class="hidden-file-input" onchange="App.handleImageUpload(this, 'userAvatar')"></label><div class="flex-1"><div class="flex justify-between mb-1"><p class="text-[10px] text-[#565f89]">玩家设定 (YOU)</p><div class="flex gap-2"><button onclick="App.clearInput('input-user-persona')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-user-persona', '玩家设定')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-user-persona" class="custom-input w-full p-2 rounded text-xs leading-relaxed h-12 resize-none" oninput="App.updateData('userPersona', this.value)"></textarea></div></div><div class="relative"><div class="flex justify-between items-end mb-1 ml-1"><p class="text-[10px] text-[#565f89]">破限 (JAILBREAK)</p><div class="flex gap-2 items-center"><label class="cursor-pointer bg-[#24283b] hover:bg-[#2f334d] text-[10px] text-[#c0caf5] px-2 py-0.5 rounded border border-[#414868] transition-colors flex items-center gap-1 mr-2"><i class="fa-solid fa-folder-open pointer-events-none"></i> 批量导入<input type="file" id="file-preset-raw" multiple class="hidden-file-input" onchange="App.handleRawPresetUpload(this)"></label><button onclick="App.clearInput('input-jailbreak')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-jailbreak', '破限设置')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-jailbreak" class="custom-input w-full p-2 rounded text-[10px] font-mono leading-relaxed h-32 resize-none text-[#73daca]" oninput="App.updateData('jailbreak', this.value)"></textarea></div></div>
             </div>
 
-            <!-- 3. 系统页 -->
             <div id="page-system" class="hidden p-4 space-y-6">
                 <div class="space-y-4 border-b border-[#292e42] pb-6">
                     <label class="text-xs font-bold text-[#bb9af7] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 門戶與個性化</label>
@@ -158,9 +157,43 @@
             async delete(k) { if (!this.db) await this.init(); return new Promise((res, rej) => { const tx = this.db.transaction(["assets"], "readwrite"); tx.objectStore("assets").delete(k); tx.oncomplete = res; }); }
         };
 
+        // --- V41 新增: 全局指令接口 ---
+        window.triggerScenario = (text) => {
+             // 調用 App 內部的邏輯
+             App.handleCardSelection(text);
+        };
+
         const App = {
             data: [], currentId: null, fsTargetId: null, editMsgIndex: null, currentPin: "",
             audioUnlocked: false,
+
+            // --- V41 新增: 處理卡片點擊邏輯 ---
+            handleCardSelection(text) {
+                // 1. 在聊天界面顯示用戶的選擇 (模擬用戶發送)
+                // 為了美觀，可以加一個前綴，或者直接顯示選項內容
+                const userContent = "我选择了：" + text;
+                
+                // 2. 寫入數據
+                const adv = this.data.find(a => a.id === this.currentId);
+                if(!adv) return;
+                if(!adv.chatHistory) adv.chatHistory = [];
+                
+                // 寫入歷史
+                adv.chatHistory.push({ role: 'user', content: userContent, timestamp: Date.now() });
+                this.saveToLocal();
+                
+                // 3. 更新界面
+                this.renderChat();
+                
+                // 4. 滾動到底部
+                const c = document.getElementById('chat-container');
+                setTimeout(() => c.scrollTop = c.scrollHeight, 50);
+
+                // 5. 觸發 AI 回覆
+                this.generateAIResponse();
+                
+                this.showToast("剧情已触发");
+            },
 
             async init() {
                 try { await AssetDB.init(); } catch(e) { console.log("DB Fail"); }
@@ -170,21 +203,14 @@
                 this.renderAdventureList(); this.switchTab('adventure');
                 document.getElementById('chat-container').addEventListener('click', (e) => { document.querySelectorAll('.message-group').forEach(el => el.classList.remove('active-touch')); const bubble = e.target.closest('.message-group'); if (bubble) bubble.classList.add('active-touch'); });
                 
-                // V34: 初始化预览
                 this.updatePreviewThumb('bg_image', 'preview-bg');
                 this.updatePreviewThumb('cover_image', 'preview-cover');
                 this.updateAudioPreview();
             },
             
-            // V35: Flip Card Support Logic
-            toggleFlip(card) {
-                card.classList.toggle('is-flipped');
-            },
-
-            // V34: 预览逻辑
+            toggleFlip(card) { card.classList.toggle('is-flipped'); },
             async updatePreviewThumb(key, elId) { const b = await AssetDB.get(key); const el = document.getElementById(elId); if(b) { el.src = URL.createObjectURL(b); el.classList.add('show'); } else { el.classList.remove('show'); } },
             async updateAudioPreview() { const b = await AssetDB.get('custom_audio'); const el = document.getElementById('preview-audio-icon'); if(b) el.classList.add('show'); else el.classList.remove('show'); },
-
             unlockAudioEngine() { if (this.audioUnlocked) return; const a = document.getElementById('startup-audio'); a.volume = 0; a.play().then(() => { a.pause(); a.currentTime = 0; a.volume = 0.6; this.audioUnlocked = true; }).catch(()=>{}); },
             playStartupSound() { const a = document.getElementById('startup-audio'); a.currentTime = 0; a.volume = 0.6; a.play().catch(e => { const fb = new Audio(a.src); fb.play(); }); },
             renderAestheticTitle(text) { const c = document.getElementById('aesthetic-title'); c.innerHTML = ''; const str = text || "以文為碼，重構森羅萬象"; const lines = str.split(/[ ，,。.\n]/).filter(l => l.trim() !== ""); lines.forEach((line) => { const div = document.createElement('div'); div.className = 'title-line'; div.innerText = line; c.appendChild(div); }); },
