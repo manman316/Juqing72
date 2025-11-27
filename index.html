@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>控制台 (SETTINGS) - 黎梨 V34 最終反饋版</title>
+    <title>控制台 (SETTINGS) - 黎梨 V35 卡片适配版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -18,12 +18,9 @@
         #aesthetic-title { position: absolute; top: 15%; right: 12%; writing-mode: vertical-rl; text-orientation: upright; font-family: 'Noto Serif SC', serif; color: rgba(255, 255, 255, 0.9); text-shadow: 2px 2px 8px rgba(0,0,0,0.6); display: flex; gap: 12px; height: 60%; flex-wrap: wrap-reverse; align-content: flex-start; pointer-events: none; }
         .title-line { font-size: 2rem; font-weight: 600; letter-spacing: 0.2em; transition: all 0.5s; }
         .title-line:nth-child(odd) { margin-top: 0; } .title-line:nth-child(even) { margin-top: 40px; }
-        
-        /* 扫描线 */
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: rgba(122, 162, 247, 0.8); box-shadow: 0 0 10px #7aa2f7; animation: scan 1.5s ease-in-out infinite; display: none; }
         @keyframes scan { 0% { top: 20%; opacity: 0; } 50% { opacity: 1; } 100% { top: 80%; opacity: 0; } }
 
-        /* 密码键盘 */
         #keypad-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         #keypad-overlay.active { opacity: 1; pointer-events: auto; }
         .key-btn { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 26px; font-weight: 300; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer; backdrop-filter: blur(5px); }
@@ -44,12 +41,17 @@
         .hidden-file-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; opacity: 0; pointer-events: none; }
         .view-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; background-color: transparent; } .view-hidden { display: none !important; }
         .toast-enter { transform: translateY(100%); opacity: 0; } .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 0.3s ease; } .toast-exit { transform: translateY(0); opacity: 1; } .toast-exit-active { transform: translateY(100%); opacity: 0; transition: all 0.3s ease; }
+        .preview-thumb { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; border: 1px solid #414868; margin-left: 8px; display: none; } .preview-thumb.show { display: block; }
+        .preview-audio-icon { color: #7aa2f7; margin-left: 8px; display: none; cursor: pointer; } .preview-audio-icon.show { display: block; }
         
-        /* V34 新增：缩略图样式 */
-        .preview-thumb { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; border: 1px solid #414868; margin-left: 8px; display: none; }
-        .preview-thumb.show { display: block; }
-        .preview-audio-icon { color: #7aa2f7; margin-left: 8px; display: none; cursor: pointer; }
-        .preview-audio-icon.show { display: block; }
+        /* V35: 翻转卡片核心样式 (Engine-Level Support) */
+        .lq-perspective-container { perspective: 1500px; width: 100%; max-width: 400px; margin: 0 auto; }
+        .lq-flip-card { width: 100%; background-color: transparent; cursor: pointer; position: relative; aspect-ratio: 3/5; } /* 使用宽高比适配 */
+        .lq-flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform-style: preserve-3d; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); border-radius: 12px; }
+        .lq-flip-card.is-flipped .lq-flip-card-inner { transform: rotateY(180deg); }
+        .lq-card-front, .lq-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; }
+        .lq-card-front { background-color: #f7f3ed; color: #4a423b; padding: 20px; justify-content: space-between; border: 1px solid #e8e2da; }
+        .lq-card-back { background-color: #fdfaf6; color: #4a423b; transform: rotateY(180deg); border: 1px solid #e8e2da; padding: 10px; }
     </style>
 </head>
 <body class="h-screen flex flex-col w-full text-sm relative" ontouchstart="App.unlockAudioEngine()" onclick="App.unlockAudioEngine()">
@@ -69,17 +71,10 @@
         </div>
         <div id="keypad-overlay">
             <div class="mb-10 flex gap-4 transform scale-110"><div class="pin-dot" id="dot-1"></div><div class="pin-dot" id="dot-2"></div><div class="pin-dot" id="dot-3"></div><div class="pin-dot" id="dot-4"></div></div>
-            <div class="grid grid-cols-3 gap-x-8 gap-y-6">
-                <div class="key-btn" onclick="App.inputPin(1)">1</div><div class="key-btn" onclick="App.inputPin(2)">2</div><div class="key-btn" onclick="App.inputPin(3)">3</div>
-                <div class="key-btn" onclick="App.inputPin(4)">4</div><div class="key-btn" onclick="App.inputPin(5)">5</div><div class="key-btn" onclick="App.inputPin(6)">6</div>
-                <div class="key-btn" onclick="App.inputPin(7)">7</div><div class="key-btn" onclick="App.inputPin(8)">8</div><div class="key-btn" onclick="App.inputPin(9)">9</div>
-                <div class="key-btn text-xl" onclick="App.cancelPin()"><i class="fa-solid fa-arrow-left"></i></div>
-                <div class="key-btn" onclick="App.inputPin(0)">0</div>
-                <div class="key-btn text-xl" onclick="App.clearPin()"><i class="fa-solid fa-delete-left"></i></div>
-            </div>
+            <div class="grid grid-cols-3 gap-x-8 gap-y-6"><div class="key-btn" onclick="App.inputPin(1)">1</div><div class="key-btn" onclick="App.inputPin(2)">2</div><div class="key-btn" onclick="App.inputPin(3)">3</div><div class="key-btn" onclick="App.inputPin(4)">4</div><div class="key-btn" onclick="App.inputPin(5)">5</div><div class="key-btn" onclick="App.inputPin(6)">6</div><div class="key-btn" onclick="App.inputPin(7)">7</div><div class="key-btn" onclick="App.inputPin(8)">8</div><div class="key-btn" onclick="App.inputPin(9)">9</div><div class="key-btn text-xl" onclick="App.cancelPin()"><i class="fa-solid fa-arrow-left"></i></div><div class="key-btn" onclick="App.inputPin(0)">0</div><div class="key-btn text-xl" onclick="App.clearPin()"><i class="fa-solid fa-delete-left"></i></div></div>
             <div class="mt-12 text-white/40 text-[10px] tracking-[0.3em] font-serif">VERIFICATION REQUIRED</div>
         </div>
-        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50">SYSTEM V34.0 READY</div>
+        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50">SYSTEM V35.0 READY</div>
     </div>
 
     <div id="app-background"></div>
@@ -101,7 +96,7 @@
 
             <div id="page-settings" class="hidden p-4 pb-24 space-y-6">
                 <div class="space-y-2"><label class="text-xs font-bold text-[#ff9e64] uppercase tracking-wider">剧本标题</label><input type="text" id="input-title" class="custom-input w-full p-3 rounded-md text-sm font-bold" oninput="App.updateData('title', this.value)"></div>
-                <div class="space-y-3"><div class="flex justify-between items-end"><label class="text-xs font-bold text-[#ff9e64] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-user"></i> 角色卡</label><label class="cursor-pointer bg-[#24283b] hover:bg-[#2f334d] text-[10px] text-[#c0caf5] px-3 py-1.5 rounded border border-[#414868] transition-colors flex items-center gap-1"><i class="fa-solid fa-upload"></i> 导入JSON<input type="file" id="file-char-import" class="hidden-file-input" onchange="App.handleFileImport(this, 'character')"></label></div><div class="bg-[#1f2335] rounded-lg p-3 border border-[#292e42]"><div class="flex gap-3 mb-3"><label class="w-16 h-16 shrink-0 bg-[#1a1b26] rounded-md relative overflow-hidden group cursor-pointer border border-[#414868] hover:border-[#ff9e64]"><img id="img-char-avatar" class="w-full h-full object-cover hidden"><div id="ph-char-avatar" class="absolute inset-0 flex flex-col items-center justify-center text-[#565f89] group-hover:text-[#ff9e64]"><i class="fa-solid fa-camera text-sm"></i></div><input type="file" id="file-char-avatar" accept="image/*" class="hidden-file-input" onchange="App.handleImageUpload(this, 'charAvatar')"></label><div class="flex-1 flex flex-col justify-center gap-2"><input type="text" id="input-char-name" class="custom-input p-2 rounded text-sm w-full font-bold" placeholder="角色名称" oninput="App.updateData('charName', this.value)"></div></div><div class="mt-3"><div class="flex justify-between mb-1"><p class="text-[10px] text-[#565f89]">人设描述</p><div class="flex gap-2"><button onclick="App.clearInput('input-char-desc')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-char-desc', '人设描述')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-char-desc" class="custom-input w-full p-2 rounded text-xs leading-relaxed h-24 resize-none" oninput="App.updateData('charDesc', this.value)"></textarea></div><div class="mt-3"><div class="flex justify-between mb-1"><p class="text-[10px] text-[#565f89]">开场白</p><div class="flex gap-2"><button onclick="App.clearInput('input-first-mes')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-first-mes', '开场白')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-first-mes" class="custom-input w-full p-2 rounded text-xs leading-relaxed h-20 resize-none" oninput="App.updateData('firstMes', this.value)"></textarea></div></div></div>
+                <div class="space-y-3"><div class="flex justify-between items-end"><label class="text-xs font-bold text-[#ff9e64] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-user"></i> 角色卡</label><label class="cursor-pointer bg-[#24283b] hover:bg-[#2f334d] text-[10px] text-[#c0caf5] px-3 py-1.5 rounded border border-[#414868] transition-colors flex items-center gap-1"><i class="fa-solid fa-upload"></i> 导入JSON<input type="file" id="file-char-import" class="hidden-file-input" onchange="App.handleFileImport(this, 'character')"></label></div><div class="bg-[#1f2335] rounded-lg p-3 border border-[#292e42]"><div class="flex gap-3 mb-3"><label class="w-16 h-16 shrink-0 bg-[#1a1b26] rounded-md relative overflow-hidden group cursor-pointer border border-[#414868] hover:border-[#ff9e64]"><img id="img-char-avatar" class="w-full h-full object-cover hidden"><div id="ph-char-avatar" class="absolute inset-0 flex flex-col items-center justify-center text-[#565f89] group-hover:text-[#ff9e64]"><i class="fa-solid fa-camera text-sm"></i></div><input type="file" id="file-char-avatar" accept="image/*" class="hidden-file-input" onchange="App.handleImageUpload(this, 'charAvatar')"></label><div class="flex-1 flex flex-col justify-center gap-2"><input type="text" id="input-char-name" class="custom-input p-2 rounded text-sm w-full font-bold" placeholder="角色名称" oninput="App.updateData('charName', this.value)"></div></div><div class="mt-3"><div class="flex justify-between mb-1"><p class="text-[10px] text-[#565f89]">人设描述</p><div class="flex gap-2"><button onclick="App.clearInput('input-char-desc')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-char-desc', '人设描述')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-char-desc" class="custom-input w-full p-2 rounded text-xs leading-relaxed h-24 resize-none" oninput="App.updateData('charDesc', this.value)"></textarea></div><div class="mt-3"><div class="flex justify-between mb-1"><p class="text-[10px] text-[#565f89]">开场白 (支持HTML)</p><div class="flex gap-2"><button onclick="App.clearInput('input-first-mes')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-first-mes', '开场白')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-first-mes" class="custom-input w-full p-2 rounded text-xs leading-relaxed h-20 resize-none" oninput="App.updateData('firstMes', this.value)"></textarea></div></div></div>
                 <div class="space-y-3"><div class="flex justify-between items-end"><label class="text-xs font-bold text-[#ff9e64] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-globe"></i> 世界观</label><label class="cursor-pointer bg-[#24283b] hover:bg-[#2f334d] text-[10px] text-[#c0caf5] px-3 py-1.5 rounded border border-[#414868] transition-colors flex items-center gap-1"><i class="fa-solid fa-file-import pointer-events-none"></i> 导入<input type="file" id="file-world-import" accept=".json,.txt" class="hidden-file-input" onchange="App.handleFileImport(this, 'world')"></label></div><div class="bg-[#1f2335] rounded-lg p-3 border border-[#292e42] space-y-3"><div><div class="flex justify-between mb-1"><p class="text-[10px] text-[#565f89]">世界背景</p><div class="flex gap-2"><button onclick="App.clearInput('input-world-scenario')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-world-scenario', '世界背景')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-world-scenario" class="custom-input w-full p-2 rounded text-xs leading-relaxed h-24 resize-none font-mono text-[#9aa5ce]" oninput="App.updateData('worldScenario', this.value)"></textarea></div></div></div>
                 <div class="space-y-3"><div class="flex justify-between items-end"><label class="text-xs font-bold text-[#bb9af7] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-sliders"></i> 高级预设</label></div><div class="relative bg-[#1f2335] p-2 rounded border border-[#292e42] flex gap-2"><label class="w-10 h-10 shrink-0 bg-[#2f334d] rounded-full relative overflow-hidden group cursor-pointer"><img id="img-user-avatar" class="w-full h-full object-cover hidden"><div id="ph-user-avatar" class="absolute inset-0 flex items-center justify-center text-[#7aa2f7]"><i class="fa-solid fa-user pointer-events-none"></i></div><input type="file" id="file-user-avatar" accept="image/*" class="hidden-file-input" onchange="App.handleImageUpload(this, 'userAvatar')"></label><div class="flex-1"><div class="flex justify-between mb-1"><p class="text-[10px] text-[#565f89]">玩家设定 (YOU)</p><div class="flex gap-2"><button onclick="App.clearInput('input-user-persona')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-user-persona', '玩家设定')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-user-persona" class="custom-input w-full p-2 rounded text-xs leading-relaxed h-12 resize-none" oninput="App.updateData('userPersona', this.value)"></textarea></div></div><div class="relative"><div class="flex justify-between items-end mb-1 ml-1"><p class="text-[10px] text-[#565f89]">破限 (JAILBREAK)</p><div class="flex gap-2 items-center"><label class="cursor-pointer bg-[#24283b] hover:bg-[#2f334d] text-[10px] text-[#c0caf5] px-2 py-0.5 rounded border border-[#414868] transition-colors flex items-center gap-1 mr-2"><i class="fa-solid fa-folder-open pointer-events-none"></i> 批量导入<input type="file" id="file-preset-raw" multiple class="hidden-file-input" onchange="App.handleRawPresetUpload(this)"></label><button onclick="App.clearInput('input-jailbreak')" class="text-[#565f89] hover:text-red-400 text-xs px-2 py-1"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><button onclick="App.openFullscreen('input-jailbreak', '破限设置')" class="text-[#565f89] hover:text-[#ff9e64] text-xs px-2 py-1"><i class="fa-solid fa-expand pointer-events-none"></i></button></div></div><textarea id="input-jailbreak" class="custom-input w-full p-2 rounded text-[10px] font-mono leading-relaxed h-32 resize-none text-[#73daca]" oninput="App.updateData('jailbreak', this.value)"></textarea></div></div>
             </div>
@@ -110,22 +105,11 @@
             <div id="page-system" class="hidden p-4 space-y-6">
                 <div class="space-y-4 border-b border-[#292e42] pb-6">
                     <label class="text-xs font-bold text-[#bb9af7] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 門戶與個性化</label>
-                    <!-- V34 修复：添加缩略图反馈 -->
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] text-[#565f89] flex items-center gap-2">全局壁紙 <img id="preview-bg" class="preview-thumb"></span>
-                        <div class="flex gap-2"><label class="cursor-pointer text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-[#c0caf5]">上傳<input type="file" id="file-bg-upload" accept="image/*" class="hidden-file-input" onchange="App.handleBgUpload(this)"></label><button onclick="App.clearBackground()" class="text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-red-400">清除</button></div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] text-[#565f89] flex items-center gap-2">封面圖片 <img id="preview-cover" class="preview-thumb"></span>
-                        <div class="flex gap-2"><label class="cursor-pointer text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-[#c0caf5]">上傳<input type="file" id="file-cover-upload" accept="image/*" class="hidden-file-input" onchange="App.handleCoverUpload(this)"></label><button onclick="App.clearCover()" class="text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-red-400">重置</button></div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] text-[#565f89] flex items-center gap-2">啟動音效 <i id="preview-audio-icon" class="fa-solid fa-play-circle preview-audio-icon" onclick="document.getElementById('startup-audio').play()"></i></span>
-                        <div class="flex gap-2"><label class="cursor-pointer text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-[#c0caf5]">上傳<input type="file" id="file-audio-upload" accept="audio/*,video/*" class="hidden-file-input" onchange="App.handleAudioUpload(this)"></label><button onclick="App.clearAudio()" class="text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-red-400">默認</button></div>
-                    </div>
-                    
-                    <div class="space-y-1"><span class="text-[10px] text-[#565f89]">歡迎詞 (自動豎排錯位)</span><textarea id="input-welcome-text" class="custom-input w-full p-2 rounded text-xs" rows="2" placeholder="以文為碼，重構森羅萬象" oninput="App.saveSystemSettings()"></textarea></div>
-                    <div class="space-y-1"><span class="text-[10px] text-[#565f89]">安全鎖密碼 (4位)</span><input type="number" id="input-passcode" class="custom-input w-full p-2 rounded text-xs font-mono" placeholder="留空則不啟用" oninput="if(this.value.length>4) this.value=this.value.slice(0,4); App.saveSystemSettings()"></div>
+                    <div class="flex justify-between items-center"><span class="text-[10px] text-[#565f89] flex items-center gap-2">全局壁紙 <img id="preview-bg" class="preview-thumb"></span><div class="flex gap-2"><label class="cursor-pointer text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-[#c0caf5]">上傳<input type="file" id="file-bg-upload" accept="image/*" class="hidden-file-input" onchange="App.handleBgUpload(this)"></label><button onclick="App.clearBackground()" class="text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-red-400">清除</button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-[10px] text-[#565f89] flex items-center gap-2">封面圖片 <img id="preview-cover" class="preview-thumb"></span><div class="flex gap-2"><label class="cursor-pointer text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-[#c0caf5]">上傳<input type="file" id="file-cover-upload" accept="image/*" class="hidden-file-input" onchange="App.handleCoverUpload(this)"></label><button onclick="App.clearCover()" class="text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-red-400">重置</button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-[10px] text-[#565f89] flex items-center gap-2">啟動音效 <i id="preview-audio-icon" class="fa-solid fa-play-circle preview-audio-icon" onclick="document.getElementById('startup-audio').play()"></i></span><div class="flex gap-2"><label class="cursor-pointer text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-[#c0caf5]">上傳<input type="file" id="file-audio-upload" accept="audio/*,video/*" class="hidden-file-input" onchange="App.handleAudioUpload(this)"></label><button onclick="App.clearAudio()" class="text-[10px] bg-[#24283b] px-2 py-1 rounded border border-[#414868] text-red-400">默認</button></div></div>
+                    <div class="space-y-1"><span class="text-[10px] text-[#565f89]">歡迎詞</span><textarea id="input-welcome-text" class="custom-input w-full p-2 rounded text-xs" rows="2" placeholder="以文為碼，重構森羅萬象" oninput="App.saveSystemSettings()"></textarea></div>
+                    <div class="space-y-1"><span class="text-[10px] text-[#565f89]">安全鎖密碼</span><input type="number" id="input-passcode" class="custom-input w-full p-2 rounded text-xs font-mono" placeholder="留空則不啟用" oninput="if(this.value.length>4) this.value=this.value.slice(0,4); App.saveSystemSettings()"></div>
                 </div>
                 <div class="space-y-4 border-b border-[#292e42] pb-6">
                     <label class="text-xs font-bold text-[#7aa2f7] uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-network-wired"></i> API 连接</label>
@@ -186,105 +170,46 @@
                 this.renderAdventureList(); this.switchTab('adventure');
                 document.getElementById('chat-container').addEventListener('click', (e) => { document.querySelectorAll('.message-group').forEach(el => el.classList.remove('active-touch')); const bubble = e.target.closest('.message-group'); if (bubble) bubble.classList.add('active-touch'); });
                 
-                // V34: 初始化预载预览
+                // V34: 初始化预览
                 this.updatePreviewThumb('bg_image', 'preview-bg');
                 this.updatePreviewThumb('cover_image', 'preview-cover');
                 this.updateAudioPreview();
             },
+            
+            // V35: Flip Card Support Logic
+            toggleFlip(card) {
+                card.classList.toggle('is-flipped');
+            },
 
-            // V34: 缩略图更新逻辑
-            async updatePreviewThumb(key, elId) {
-                const blob = await AssetDB.get(key);
-                const el = document.getElementById(elId);
-                if (blob) {
-                    el.src = URL.createObjectURL(blob);
-                    el.classList.add('show');
-                } else {
-                    el.classList.remove('show');
-                }
-            },
-            async updateAudioPreview() {
-                const blob = await AssetDB.get('custom_audio');
-                const el = document.getElementById('preview-audio-icon');
-                if (blob) el.classList.add('show');
-                else el.classList.remove('show');
-            },
+            // V34: 预览逻辑
+            async updatePreviewThumb(key, elId) { const b = await AssetDB.get(key); const el = document.getElementById(elId); if(b) { el.src = URL.createObjectURL(b); el.classList.add('show'); } else { el.classList.remove('show'); } },
+            async updateAudioPreview() { const b = await AssetDB.get('custom_audio'); const el = document.getElementById('preview-audio-icon'); if(b) el.classList.add('show'); else el.classList.remove('show'); },
 
             unlockAudioEngine() { if (this.audioUnlocked) return; const a = document.getElementById('startup-audio'); a.volume = 0; a.play().then(() => { a.pause(); a.currentTime = 0; a.volume = 0.6; this.audioUnlocked = true; }).catch(()=>{}); },
-            
-            // V34: 修复双重播放，此函数仅负责播放
-            playStartupSound() { 
-                const a = document.getElementById('startup-audio'); 
-                a.currentTime = 0; a.volume = 0.6; 
-                a.play().catch(e => { const fb = new Audio(a.src); fb.play(); }); 
-            },
+            playStartupSound() { const a = document.getElementById('startup-audio'); a.currentTime = 0; a.volume = 0.6; a.play().catch(e => { const fb = new Audio(a.src); fb.play(); }); },
+            renderAestheticTitle(text) { const c = document.getElementById('aesthetic-title'); c.innerHTML = ''; const str = text || "以文為碼，重構森羅萬象"; const lines = str.split(/[ ，,。.\n]/).filter(l => l.trim() !== ""); lines.forEach((line) => { const div = document.createElement('div'); div.className = 'title-line'; div.innerText = line; c.appendChild(div); }); },
 
-            renderAestheticTitle(text) {
-                const container = document.getElementById('aesthetic-title'); container.innerHTML = '';
-                const str = text || "以文為碼，重構森羅萬象"; 
-                const lines = str.split(/[ ，,。.\n]/).filter(l => l.trim() !== "");
-                lines.forEach((line) => { const div = document.createElement('div'); div.className = 'title-line'; div.innerText = line; container.appendChild(div); });
-            },
-
-            createNewAdventure(t = "新冒险") {
-                const newId = Date.now().toString() + Math.floor(Math.random() * 1000).toString();
-                const n = { id: newId, title: t, charName: "", charDesc: "", firstMes: "你好，旅行者。", worldScenario: "", userPersona: "", jailbreak: "", charAvatar: "", userAvatar: "", chatHistory: [] };
-                this.data.push(n); this.saveToLocal(); this.currentId = newId; this.loadAdventure(newId); this.renderAdventureList(); this.enterDashboard(); this.switchTab('settings'); setTimeout(() => document.getElementById('input-title').focus(), 100); this.showToast("新篇章已開啟");
-            },
+            createNewAdventure(t = "新冒险") { const n = { id: Date.now().toString() + Math.floor(Math.random() * 1000).toString(), title: t, charName: "", charDesc: "", firstMes: "你好，旅行者。", worldScenario: "", userPersona: "", jailbreak: "", charAvatar: "", userAvatar: "", chatHistory: [] }; this.data.push(n); this.saveToLocal(); this.currentId = n.id; this.loadAdventure(n.id); this.renderAdventureList(); this.enterDashboard(); this.switchTab('settings'); setTimeout(() => document.getElementById('input-title').focus(), 100); this.showToast("新篇章已開啟"); },
             updateData(key, value) { if (!this.currentId) return; const adv = this.data.find(a => a.id === this.currentId); if (adv) { adv[key] = value; this.saveToLocal(); if (key === 'title') { this.renderAdventureList(); this.updateChatHeader(); } if (['charName', 'charAvatar'].includes(key)) this.updateChatHeader(); } },
             enterChat(id) { this.currentId = id; this.loadAdventure(id); document.getElementById('view-dashboard').classList.add('view-hidden'); document.getElementById('view-chat').classList.remove('view-hidden'); const c = document.getElementById('chat-container'); setTimeout(() => c.scrollTop = c.scrollHeight, 50); },
 
             async loadAudioSettings() { const a = document.getElementById('startup-audio'); const d = await AssetDB.get('custom_audio'); if (d) { a.src = URL.createObjectURL(d); } else { a.src = "data:audio/wav;base64,UklGRl9vT1BXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"; } },
-            handleAudioUpload(i) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = async (e) => { const b = new Blob([e.target.result], { type: f.type }); await AssetDB.save('custom_audio', b); this.loadAudioSettings(); this.showToast("音效已更换"); this.updateAudioPreview(); setTimeout(()=>document.getElementById('startup-audio').play(), 500); }; r.readAsArrayBuffer(f); i.value = ''; },
+            handleAudioUpload(i) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = async (e) => { const b = new Blob([e.target.result], { type: f.type }); await AssetDB.save('custom_audio', b); this.loadAudioSettings(); this.updateAudioPreview(); this.showToast("音效已更换"); setTimeout(()=>document.getElementById('startup-audio').play(), 500); }; r.readAsArrayBuffer(f); i.value = ''; },
             async clearAudio() { await AssetDB.delete('custom_audio'); this.loadAudioSettings(); this.updateAudioPreview(); this.showToast("已恢复"); },
-            
             async loadBackground() { const b = await AssetDB.get('bg_image'); const el = document.getElementById('app-background'); if (b) { el.style.backgroundImage = `url(${URL.createObjectURL(b)})`; el.style.opacity = '0.4'; } else { el.style.backgroundImage = 'none'; el.style.opacity = '0'; } },
             handleBgUpload(i) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = async (e) => { const b = new Blob([e.target.result], {type: f.type}); await AssetDB.save('bg_image', b); this.loadBackground(); this.updatePreviewThumb('bg_image', 'preview-bg'); this.showToast("背景已设"); }; r.readAsArrayBuffer(f); i.value = ''; },
             async clearBackground() { await AssetDB.delete('bg_image'); this.loadBackground(); this.updatePreviewThumb('bg_image', 'preview-bg'); this.showToast("背景已删"); },
-            
             async loadCoverSettings() { const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; this.renderAestheticTitle(s.welcomeText); document.getElementById('input-welcome-text').value = s.welcomeText || ""; document.getElementById('input-passcode').value = s.passcode || ""; const b = await AssetDB.get('cover_image'); if (b) document.getElementById('view-cover').style.backgroundImage = `url(${URL.createObjectURL(b)})`; },
             handleCoverUpload(i) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = async (e) => { const b = new Blob([e.target.result], {type: f.type}); await AssetDB.save('cover_image', b); this.loadCoverSettings(); this.updatePreviewThumb('cover_image', 'preview-cover'); this.showToast("封面已换"); }; r.readAsArrayBuffer(f); i.value = ''; },
             async clearCover() { await AssetDB.delete('cover_image'); document.getElementById('view-cover').style.backgroundImage = "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')"; this.updatePreviewThumb('cover_image', 'preview-cover'); this.showToast("封面重置"); },
 
-            // V34: 修复后的解锁逻辑 - 拆分声音播放
-            tryUnlock() { 
-                this.unlockAudioEngine();
-                const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; 
-                if (s.passcode && s.passcode.length === 4) { 
-                    // 有密码：只弹键盘，不播放
-                    document.getElementById('keypad-overlay').classList.add('active'); 
-                    this.currentPin = ""; 
-                    this.updatePinDots(); 
-                } else { 
-                    // 无密码：播放 + 动画
-                    this.playStartupSound();
-                    this.animateScan(); 
-                } 
-            },
-            
-            // 动画 + 跳转 (不负责播放，除非被无密码逻辑调用)
-            performUnlock() { 
-                this.animateScan(); 
-            },
-
+            tryUnlock() { this.unlockAudioEngine(); const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; if (s.passcode && s.passcode.length === 4) { document.getElementById('keypad-overlay').classList.add('active'); this.currentPin = ""; this.updatePinDots(); } else { this.playStartupSound(); this.animateScan(); } },
+            performUnlock() { this.playStartupSound(); this.animateScan(); },
             inputPin(n) { if (this.currentPin.length < 4) { this.currentPin += n; this.updatePinDots(); if (this.currentPin.length === 4) setTimeout(() => this.checkPin(), 200); } },
             clearPin() { this.currentPin = this.currentPin.slice(0, -1); this.updatePinDots(); },
             cancelPin() { document.getElementById('keypad-overlay').classList.remove('active'); this.currentPin = ""; this.updatePinDots(); },
             updatePinDots() { for(let i=1; i<=4; i++) { const d = document.getElementById(`dot-${i}`); if (i <= this.currentPin.length) d.classList.add('filled'); else d.classList.remove('filled'); } },
-            
-            checkPin() { 
-                const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; 
-                if (this.currentPin === s.passcode) { 
-                    // 密码正确：播放声音 + 动画
-                    this.playStartupSound();
-                    document.getElementById('keypad-overlay').classList.remove('active'); 
-                    this.performUnlock(); 
-                } else { 
-                    document.querySelector('.mb-10').classList.add('animate-bounce'); 
-                    setTimeout(() => { document.querySelector('.mb-10').classList.remove('animate-bounce'); this.currentPin = ""; this.updatePinDots(); }, 500); 
-                } 
-            },
-            
+            checkPin() { const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; if (this.currentPin === s.passcode) { document.getElementById('keypad-overlay').classList.remove('active'); this.performUnlock(); } else { document.querySelector('.mb-10').classList.add('animate-bounce'); setTimeout(() => { document.querySelector('.mb-10').classList.remove('animate-bounce'); this.currentPin = ""; this.updatePinDots(); }, 500); } },
             animateScan() { document.getElementById('scan-line').style.display = 'block'; document.getElementById('login-text').innerText = "Verifying..."; document.getElementById('login-text').classList.add('text-[#7aa2f7]', 'animate-pulse'); setTimeout(() => { document.getElementById('login-text').innerText = "Granted"; document.getElementById('login-text').classList.replace('text-[#7aa2f7]', 'text-green-400'); setTimeout(() => { document.getElementById('view-cover').classList.add('cover-hidden'); document.getElementById('view-dashboard').classList.remove('view-hidden'); }, 500); }, 1200); },
             updateCharCount(t) { document.getElementById('char-count').innerText = t.value.length + ' chars'; },
             enterDashboard() { document.getElementById('view-chat').classList.add('view-hidden'); document.getElementById('view-dashboard').classList.remove('view-hidden'); this.switchTab('adventure'); },
