@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>控制台 (SETTINGS) - 黎梨 V44 全能导演版</title>
+    <title>控制台 (SETTINGS) - 黎梨 V45 完美操控版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -54,7 +54,8 @@
         .toggle-checkbox:checked + .toggle-label:before { right: 0; background-color: #1a1b26; }
         .toggle-checkbox { position: absolute; visibility: hidden; }
 
-        /* V40: Card Engine */
+        /* V45: Selectable Text & Card Engine */
+        .message-content { user-select: text; -webkit-user-select: text; } /* 允許選擇文本 */
         .lq-perspective-container { perspective: 1500px; width: 100%; max-width: 400px; margin: 0 auto; }
         .lq-flip-card { width: 100%; background-color: transparent; cursor: pointer; position: relative; aspect-ratio: 3/5; }
         .lq-flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform-style: preserve-3d; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); border-radius: 12px; }
@@ -68,7 +69,6 @@
 
     <audio id="startup-audio" preload="auto"></audio>
 
-    <!-- VIEW 0: COVER -->
     <div id="view-cover">
         <div class="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm"></div>
         <div id="aesthetic-title"></div>
@@ -84,14 +84,12 @@
             <div class="grid grid-cols-3 gap-x-8 gap-y-6"><div class="key-btn" onclick="App.inputPin(1)">1</div><div class="key-btn" onclick="App.inputPin(2)">2</div><div class="key-btn" onclick="App.inputPin(3)">3</div><div class="key-btn" onclick="App.inputPin(4)">4</div><div class="key-btn" onclick="App.inputPin(5)">5</div><div class="key-btn" onclick="App.inputPin(6)">6</div><div class="key-btn" onclick="App.inputPin(7)">7</div><div class="key-btn" onclick="App.inputPin(8)">8</div><div class="key-btn" onclick="App.inputPin(9)">9</div><div class="key-btn text-xl" onclick="App.cancelPin()"><i class="fa-solid fa-arrow-left"></i></div><div class="key-btn" onclick="App.inputPin(0)">0</div><div class="key-btn text-xl" onclick="App.clearPin()"><i class="fa-solid fa-delete-left"></i></div></div>
             <div class="mt-12 text-white/40 text-[10px] tracking-[0.3em] font-serif">VERIFICATION REQUIRED</div>
         </div>
-        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50">SYSTEM V44.0 READY</div>
+        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50">SYSTEM V45.0 READY</div>
     </div>
 
     <div id="app-background"></div>
 
-    <!-- VIEW A: DASHBOARD -->
     <div id="view-dashboard" class="view-container view-hidden" style="background-color: #1a1b26;">
-        <!-- V44 Header: Checkmark is now Manual Save -->
         <header class="h-14 bg-[#1f2335] flex items-center justify-between px-4 border-b border-[#16161e] shrink-0 z-50 shadow-sm"><div class="flex items-center gap-3"><i class="fa-solid fa-gear text-[#ff9e64] text-lg"></i><span class="font-bold text-lg text-[#c0caf5]">控制台</span></div><button class="text-[#565f89] hover:text-[#ff9e64] transition-colors" onclick="App.manualSave()" title="强制保存"><i class="fa-solid fa-check text-xl"></i></button></header>
         <nav class="h-12 bg-[#1f2335] flex items-center justify-around border-b border-[#292e42] shrink-0 text-[#787c99]">
             <div class="nav-item active w-1/3 text-center py-3 cursor-pointer" onclick="App.switchTab('adventure')" id="nav-adventure">冒险</div>
@@ -128,11 +126,10 @@
                     <div class="space-y-1"><p class="text-[10px] text-[#565f89]">AI 模型</p><div class="flex gap-2"><select id="select-model" class="custom-input flex-1 p-3 rounded-md text-sm font-mono text-[#ff9e64] bg-[#16161e]" onchange="App.saveSystemSettings()"><option value="" disabled selected>请点击刷新...</option></select><button onclick="App.fetchModels()" class="bg-[#24283b] hover:bg-[#2f334d] text-[#c0caf5] px-4 rounded border border-[#414868] transition-colors"><i class="fa-solid fa-arrows-rotate pointer-events-none"></i></button></div></div>
                 </div>
                 <div class="space-y-6 px-2">
-                    <div class="space-y-2"><div class="flex justify-between text-sm font-bold text-[#c0caf5]"><span>AI 随机性</span><span class="text-[#ff9e64] font-mono" id="disp-temp">0.9</span></div><input type="range" min="0" max="2" step="0.01" value="0.9" oninput="document.getElementById('disp-temp').innerText = this.value"></div>
-                    <div class="space-y-2"><div class="flex justify-between text-sm font-bold text-[#c0caf5]"><span>回复长度</span><span class="text-[#ff9e64] font-mono" id="disp-tokens">2048</span></div><input type="range" min="200" max="8192" step="100" value="2048" oninput="document.getElementById('disp-tokens').innerText = this.value"></div>
-                    <div class="space-y-2"><div class="flex justify-between text-sm font-bold text-[#c0caf5]"><span>上下文记忆</span><span class="text-[#ff9e64] font-mono" id="disp-context">20</span></div><input type="range" min="5" max="100" step="1" value="20" oninput="document.getElementById('disp-context').innerText = this.value"></div>
+                    <div class="space-y-2"><div class="flex justify-between text-sm font-bold text-[#c0caf5]"><span>AI 随机性</span><span class="text-[#ff9e64] font-mono" id="disp-temp">0.9</span></div><input type="range" min="0" max="2" step="0.01" value="0.9" id="input-temp" oninput="document.getElementById('disp-temp').innerText = this.value; App.saveSystemSettings()"></div>
+                    <div class="space-y-2"><div class="flex justify-between text-sm font-bold text-[#c0caf5]"><span>回复长度</span><span class="text-[#ff9e64] font-mono" id="disp-tokens">2048</span></div><input type="range" min="200" max="8192" step="100" value="2048" id="input-tokens" oninput="document.getElementById('disp-tokens').innerText = this.value; App.saveSystemSettings()"></div>
+                    <div class="space-y-2"><div class="flex justify-between text-sm font-bold text-[#c0caf5]"><span>上下文记忆</span><span class="text-[#ff9e64] font-mono" id="disp-context">20</span></div><input type="range" min="5" max="100" step="1" value="20" id="input-context" oninput="document.getElementById('disp-context').innerText = this.value; App.saveSystemSettings()"></div>
                 </div>
-                <!-- V44 New Feature: Theatre Mode Switch -->
                 <div class="pt-6 border-t border-[#292e42] mt-4 flex items-center justify-between">
                     <div>
                         <span class="text-sm font-bold text-[#ff9e64] block">沈浸式劇場模式</span>
@@ -148,18 +145,26 @@
         </main>
     </div>
 
-    <!-- VIEW B: CHAT -->
-    <div id="view-chat" class="view-container view-hidden fade-in">
+    <div id="view-chat" class="view-container view-hidden fade-in relative">
         <div class="h-14 bg-[#1f2335] bg-opacity-90 backdrop-blur-sm flex items-center justify-between px-4 border-b border-[#16161e] shrink-0 shadow-sm">
              <div class="flex items-center gap-3"><button onclick="App.enterDashboard()" class="text-[#565f89] hover:text-[#ff9e64] flex items-center gap-2 transition-colors group"><i class="fa-solid fa-gear text-lg group-hover:rotate-90 transition-transform duration-500"></i><span class="font-bold text-sm">控制台</span></button></div>
              <div class="absolute left-1/2 transform -translate-x-1/2 text-center pointer-events-none"><h3 id="chat-title" class="font-bold text-[#c0caf5] text-sm shadow-black drop-shadow-md">...</h3><div class="flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span><span class="text-[10px] text-[#565f89]">Online</span></div></div>
             <div class="flex gap-3"><button onclick="App.clearChatHistory()" class="text-[#565f89] hover:text-red-400" title="清空记录"><i class="fa-solid fa-trash-can pointer-events-none"></i></button><img id="chat-header-avatar" class="w-8 h-8 rounded-full border border-[#2f334d] bg-[#1a1b26] object-cover"></div>
         </div>
-        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scroll"></div>
+        
+        <div class="absolute right-4 bottom-24 flex flex-col gap-2 z-40">
+            <button onclick="App.scrollToTop()" class="w-8 h-8 rounded-full bg-[#1f2335] border border-[#292e42] text-[#565f89] flex items-center justify-center shadow-lg hover:text-[#ff9e64] active:scale-90"><i class="fa-solid fa-arrow-up"></i></button>
+            <button onclick="App.scrollToBottom()" class="w-8 h-8 rounded-full bg-[#1f2335] border border-[#292e42] text-[#565f89] flex items-center justify-center shadow-lg hover:text-[#ff9e64] active:scale-90"><i class="fa-solid fa-arrow-down"></i></button>
+        </div>
+
+        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scroll message-content"></div>
         <div class="p-3 bg-[#1a1b26] bg-opacity-80 backdrop-blur-md border-t border-[#16161e] shrink-0">
             <div class="relative flex items-center gap-2">
                 <button onclick="App.regenerateResponse()" class="w-10 h-10 rounded-full bg-[#24283b] text-[#ff9e64] border border-[#414868] flex items-center justify-center hover:bg-[#2f334d] shrink-0 active:scale-90 transition-transform" title="重新生成"><i class="fa-solid fa-arrows-rotate pointer-events-none"></i></button>
-                <div class="relative w-full"><textarea id="chat-input" class="w-full bg-[#16161e] bg-opacity-50 text-[#c0caf5] rounded-xl p-3 pr-10 text-sm border border-[#2f334d] focus:border-[#ff9e64] outline-none h-12 resize-none" placeholder="发送消息..." oninput="App.updateCharCount(this)"></textarea><span id="char-count" class="absolute top-[-18px] right-1 text-[10px] text-[#565f89] font-mono">0 chars</span></div>
+                <div class="relative w-full">
+                    <textarea id="chat-input" class="w-full bg-[#16161e] bg-opacity-50 text-[#c0caf5] rounded-xl p-3 pr-10 text-sm border border-[#2f334d] focus:border-[#ff9e64] outline-none resize-none min-h-[48px] max-h-[150px] overflow-y-auto custom-scroll" placeholder="发送消息..." oninput="App.autoResizeInput(this); App.updateCharCount(this)"></textarea>
+                    <span id="char-count" class="absolute top-[-18px] right-1 text-[10px] text-[#565f89] font-mono">0 chars</span>
+                </div>
                 <button onclick="App.sendUserMessage()" class="absolute right-2 bottom-2.5 text-[#ff9e64] p-2 hover:scale-110 transition-transform"><i class="fa-solid fa-paper-plane pointer-events-none"></i></button>
             </div>
         </div>
@@ -217,7 +222,6 @@
                 this.updateAudioPreview();
             },
 
-            // V44: 核心修復 - 每次調用都強制寫入 IndexedDB
             async saveToLocal() { 
                 try {
                     await AssetDB.save('roleplay_saves_v2', this.data);
@@ -227,7 +231,6 @@
                 }
             },
             
-            // V44: 手動強制保存
             async manualSave() {
                 try {
                     await AssetDB.save('roleplay_saves_v2', this.data);
@@ -235,6 +238,16 @@
                 } catch(e) {
                     this.showToast("❌ 保存失敗: " + e.message);
                 }
+            },
+
+            // V45: Scroll Helpers
+            scrollToTop() { document.getElementById('chat-container').scrollTo({ top: 0, behavior: 'smooth' }); },
+            scrollToBottom() { const c = document.getElementById('chat-container'); c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' }); },
+            
+            // V45: Auto Resize Input
+            autoResizeInput(t) {
+                t.style.height = 'auto';
+                t.style.height = (t.scrollHeight) + 'px';
             },
 
             handleCardSelection(text) {
@@ -260,13 +273,12 @@
 
             createNewAdventure(t = "新冒险") { const n = { id: Date.now().toString() + Math.floor(Math.random() * 1000).toString(), title: t, charName: "", charDesc: "", firstMes: "你好，旅行者。", worldScenario: "", userPersona: "", jailbreak: "", charAvatar: "", userAvatar: "", chatHistory: [] }; this.data.push(n); this.saveToLocal(); this.currentId = n.id; this.loadAdventure(n.id); this.renderAdventureList(); this.enterDashboard(); this.switchTab('settings'); setTimeout(() => document.getElementById('input-title').focus(), 100); this.showToast("新篇章已開啟"); },
             
-            // V44: Update Data 立即觸發保存
             updateData(key, value) { 
                 if (!this.currentId) return; 
                 const adv = this.data.find(a => a.id === this.currentId); 
                 if (adv) { 
                     adv[key] = value; 
-                    this.saveToLocal(); // 立即保存
+                    this.saveToLocal(); 
                     if (key === 'title') { this.renderAdventureList(); this.updateChatHeader(); } 
                     if (['charName', 'charAvatar'].includes(key)) this.updateChatHeader(); 
                 } 
@@ -294,28 +306,50 @@
             animateScan() { document.getElementById('scan-line').style.display = 'block'; document.getElementById('login-text').innerText = "Verifying..."; document.getElementById('login-text').classList.add('text-[#7aa2f7]', 'animate-pulse'); setTimeout(() => { document.getElementById('login-text').innerText = "Granted"; document.getElementById('login-text').classList.replace('text-[#7aa2f7]', 'text-green-400'); setTimeout(() => { document.getElementById('view-cover').classList.add('cover-hidden'); document.getElementById('view-dashboard').classList.remove('view-hidden'); }, 500); }, 1200); },
             updateCharCount(t) { document.getElementById('char-count').innerText = t.value.length + ' chars'; },
             enterDashboard() { document.getElementById('view-chat').classList.add('view-hidden'); document.getElementById('view-dashboard').classList.remove('view-hidden'); this.switchTab('adventure'); },
-            loadSystemSettings() { const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || { url: '', key: '', model: '' }; document.getElementById('input-api-url').value = s.url || ''; document.getElementById('input-api-key').value = s.key || ''; if(s.model) { const sel = document.getElementById('select-model'); sel.innerHTML = `<option value="${s.model}">${s.model}</option>`; sel.value = s.model; } this.loadCoverSettings(); },
-            saveSystemSettings() { const url = document.getElementById('input-api-url').value; const key = document.getElementById('input-api-key').value; const model = document.getElementById('select-model').value; const welcomeText = document.getElementById('input-welcome-text').value; const passcode = document.getElementById('input-passcode').value; const theatreMode = document.getElementById('theatre-mode-toggle').checked; const old = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; const newS = { ...old, url, key, model, welcomeText, passcode, theatreMode }; localStorage.setItem('roleplay_api_settings', JSON.stringify(newS)); this.renderAestheticTitle(welcomeText); },
+            
+            // V45: Fixed Settings Loading & Saving
+            loadSystemSettings() { 
+                const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || { url: '', key: '', model: '' }; 
+                document.getElementById('input-api-url').value = s.url || ''; 
+                document.getElementById('input-api-key').value = s.key || ''; 
+                if(s.model) { 
+                    const sel = document.getElementById('select-model'); 
+                    sel.innerHTML = `<option value="${s.model}">${s.model}</option>`; 
+                    sel.value = s.model; 
+                } 
+                // Restore sliders
+                if(s.temp) { document.getElementById('input-temp').value = s.temp; document.getElementById('disp-temp').innerText = s.temp; }
+                if(s.tokens) { document.getElementById('input-tokens').value = s.tokens; document.getElementById('disp-tokens').innerText = s.tokens; }
+                if(s.context) { document.getElementById('input-context').value = s.context; document.getElementById('disp-context').innerText = s.context; }
+                
+                this.loadCoverSettings(); 
+            },
+            
+            saveSystemSettings() { 
+                const url = document.getElementById('input-api-url').value; 
+                const key = document.getElementById('input-api-key').value; 
+                const model = document.getElementById('select-model').value; 
+                const welcomeText = document.getElementById('input-welcome-text').value; 
+                const passcode = document.getElementById('input-passcode').value; 
+                const theatreMode = document.getElementById('theatre-mode-toggle').checked; 
+                
+                // Get slider values
+                const temp = document.getElementById('input-temp').value;
+                const tokens = document.getElementById('input-tokens').value;
+                const context = document.getElementById('input-context').value;
+
+                const old = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; 
+                const newS = { ...old, url, key, model, welcomeText, passcode, theatreMode, temp, tokens, context }; 
+                localStorage.setItem('roleplay_api_settings', JSON.stringify(newS)); 
+                this.renderAestheticTitle(welcomeText); 
+            },
+            
             async fetchModels() { let url = document.getElementById('input-api-url').value.replace(/\/$/, ''); const key = document.getElementById('input-api-key').value; const select = document.getElementById('select-model'); if (!url) return alert("请先填写 API 地址"); select.innerHTML = '<option>连接中...</option>'; const fallback = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.5-flash-8b", "gemini-1.0-pro"]; try { let fUrl = "", h = {}; if (url.includes('googleapis.com')) { if (!url.includes('v1beta')) url += '/v1beta'; fUrl = `${url}/models?key=${key}`; } else { fUrl = `${url}/models`; h = { 'Authorization': `Bearer ${key}` }; } const res = await fetch(fUrl, { method: 'GET', headers: h }); if (!res.ok) throw new Error("Err"); const data = await res.json(); const models = data.models || data.data || []; select.innerHTML = ''; if (models.length === 0) { select.innerHTML = '<option value="">未找到</option>'; return; } models.forEach(m => { let id = m.name || m.id; if (id.startsWith('models/')) id = id.replace('models/', ''); const opt = document.createElement('option'); opt.value = id; opt.text = id; select.appendChild(opt); }); this.showToast(`已获取 ${models.length} 个模型`); } catch (err) { if (url.includes('googleapis')) { select.innerHTML = ''; fallback.forEach(m => { const opt = document.createElement('option'); opt.value = m; opt.text = m; select.appendChild(opt); }); this.showToast("已加载内置 Gemini 列表"); select.value = fallback[0]; this.saveSystemSettings(); } else { select.innerHTML = '<option value="">获取失败</option>'; const manual = prompt("连接失败，请输入模型：", "gpt-3.5-turbo"); if(manual) { select.innerHTML = `<option value="${manual}">${manual}</option>`; this.saveSystemSettings(); } } } },
             handleRawPresetUpload(i) { const f = i.files; if (!f || f.length === 0) return; let txt = ""; let c = 0; Array.from(f).forEach(file => { const r = new FileReader(); r.onload = (e) => { txt += `\n\n--- File: ${file.name} ---\n${e.target.result}`; c++; if (c === f.length) { const j = document.getElementById('input-jailbreak'); j.value += txt; this.updateData('jailbreak', j.value); this.showToast(`已追加 ${f.length} 个文件`); i.value = ''; } }; r.readAsText(file); }); },
-            
-            // V44: AI 生成邏輯增加劇場模式指令注入
-            async generateAIResponse() { 
-                const adv = this.data.find(a => a.id === this.currentId); if (!adv) return; 
-                const s = JSON.parse(localStorage.getItem('roleplay_api_settings')); 
-                if (!s || !s.url || !s.key) { this.showToast("请先配置 API"); return; } 
-                
-                let sysPrompt = [`[Character: ${adv.charName}]`, `[Description: ${adv.charDesc}]`, `[Scenario: ${adv.worldScenario}]`, `[User: ${adv.userPersona}]`, adv.jailbreak].join('\n\n'); 
-                
-                // [THEATRE MODE INJECTION]
-                if (s.theatreMode) {
-                    sysPrompt += "\n\n[SYSTEM OVERRIDE: THEATRE MODE ACTIVE]\nIMPORTANT: You are now in Immersive Theatre Mode. For any content involving: SMS, Social Media Posts, News Reports, Status Screens, Letters, Inventory, or Small Scenes, you MUST NOT use plain text. You MUST render them as self-contained HTML/CSS Cards. Use the <div class='lq-scope-standalone'> wrapper. Make them look beautiful and stylistic. For normal dialogue, use plain text.";
-                }
-
-                let hist = []; const isGemini = s.url.includes('googleapis'); if (isGemini) { if(adv.firstMes) hist.push({ role: 'model', parts: [{ text: adv.firstMes }] }); adv.chatHistory.forEach(msg => hist.push({ role: msg.role === 'user' ? 'user' : 'model', parts: [{ text: msg.content }] })); } else { hist.push({ role: "system", content: sysPrompt }); if(adv.firstMes) hist.push({ role: "assistant", content: adv.firstMes }); adv.chatHistory.forEach(msg => hist.push({ role: msg.role === 'user' ? 'user' : 'assistant', content: msg.content })); } const c = document.getElementById('chat-container'); const tid = 'thinking-' + Date.now(); c.insertAdjacentHTML('beforeend', `<div id="${tid}" class="flex gap-3 animate-pulse"><div class="w-8 h-8 rounded-full bg-gray-700 shrink-0"></div><div class="bg-[#24283b] bg-opacity-60 backdrop-blur-md border border-[#2f334d] text-gray-400 p-3 text-sm rounded-r-xl rounded-bl-xl w-fit">Thinking...</div></div>`); c.scrollTop = c.scrollHeight; try { let fUrl, body, head = {}; if (isGemini) { let b = s.url.replace(/\/$/, ''); if (!b.includes('v1beta')) b += '/v1beta'; fUrl = `${b}/models/${s.model || 'gemini-1.5-flash'}:generateContent?key=${s.key}`; head = { 'Content-Type': 'application/json' }; body = JSON.stringify({ contents: hist, systemInstruction: { parts: [{ text: sysPrompt }] }, generationConfig: { temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, maxOutputTokens: parseInt(document.getElementById('disp-tokens').innerText)||2048 } }); } else { fUrl = `${s.url}/chat/completions`; head = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${s.key}` }; body = JSON.stringify({ model: s.model, messages: hist, temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, max_tokens: parseInt(document.getElementById('disp-tokens').innerText)||2048 }); } const res = await fetch(fUrl, { method: 'POST', headers: head, body }); if (!res.ok) throw new Error((await res.text())); const data = await res.json(); let reply = isGemini ? (data.candidates?.[0]?.content?.parts?.[0]?.text || "(No response)") : (data.choices?.[0]?.message?.content || "(No response)"); document.getElementById(tid).remove(); adv.chatHistory.push({ role: 'ai', content: reply, timestamp: Date.now() }); this.saveToLocal(); this.renderChat(); } catch (e) { document.getElementById(tid).remove(); this.showToast("API 错误"); console.error(e); c.insertAdjacentHTML('beforeend', `<div class="text-red-500 text-xs p-4 text-center w-fit">Error: ${e.message}</div>`); } },
-            
+            async generateAIResponse() { const adv = this.data.find(a => a.id === this.currentId); if (!adv) return; const s = JSON.parse(localStorage.getItem('roleplay_api_settings')); if (!s || !s.url || !s.key) { this.showToast("请先配置 API"); return; } let sysPrompt = [`[Character: ${adv.charName}]`, `[Description: ${adv.charDesc}]`, `[Scenario: ${adv.worldScenario}]`, `[User: ${adv.userPersona}]`, adv.jailbreak].join('\n\n'); if (s.theatreMode) { sysPrompt += "\n\n[SYSTEM OVERRIDE: THEATRE MODE ACTIVE]\nIMPORTANT: You are now in Immersive Theatre Mode. For any content involving: SMS, Social Media Posts, News Reports, Status Screens, Letters, Inventory, or Small Scenes, you MUST NOT use plain text. You MUST render them as self-contained HTML/CSS Cards. Use the <div class='lq-scope-standalone'> wrapper. Make them look beautiful and stylistic. For normal dialogue, use plain text."; } let hist = []; const isGemini = s.url.includes('googleapis'); if (isGemini) { if(adv.firstMes) hist.push({ role: 'model', parts: [{ text: adv.firstMes }] }); adv.chatHistory.forEach(msg => hist.push({ role: msg.role === 'user' ? 'user' : 'model', parts: [{ text: msg.content }] })); } else { hist.push({ role: "system", content: sysPrompt }); if(adv.firstMes) hist.push({ role: "assistant", content: adv.firstMes }); adv.chatHistory.forEach(msg => hist.push({ role: msg.role === 'user' ? 'user' : 'assistant', content: msg.content })); } const c = document.getElementById('chat-container'); const tid = 'thinking-' + Date.now(); c.insertAdjacentHTML('beforeend', `<div id="${tid}" class="flex gap-3 animate-pulse"><div class="w-8 h-8 rounded-full bg-gray-700 shrink-0"></div><div class="bg-[#24283b] bg-opacity-60 backdrop-blur-md border border-[#2f334d] text-gray-400 p-3 text-sm rounded-r-xl rounded-bl-xl w-fit">Thinking...</div></div>`); c.scrollTop = c.scrollHeight; try { let fUrl, body, head = {}; if (isGemini) { let b = s.url.replace(/\/$/, ''); if (!b.includes('v1beta')) b += '/v1beta'; fUrl = `${b}/models/${s.model || 'gemini-1.5-flash'}:generateContent?key=${s.key}`; head = { 'Content-Type': 'application/json' }; body = JSON.stringify({ contents: hist, systemInstruction: { parts: [{ text: sysPrompt }] }, generationConfig: { temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, maxOutputTokens: parseInt(document.getElementById('disp-tokens').innerText)||2048 } }); } else { fUrl = `${s.url}/chat/completions`; head = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${s.key}` }; body = JSON.stringify({ model: s.model, messages: hist, temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, max_tokens: parseInt(document.getElementById('disp-tokens').innerText)||2048 }); } const res = await fetch(fUrl, { method: 'POST', headers: head, body }); if (!res.ok) throw new Error((await res.text())); const data = await res.json(); let reply = isGemini ? (data.candidates?.[0]?.content?.parts?.[0]?.text || "(No response)") : (data.choices?.[0]?.message?.content || "(No response)"); document.getElementById(tid).remove(); adv.chatHistory.push({ role: 'ai', content: reply, timestamp: Date.now() }); this.saveToLocal(); this.renderChat(); } catch (e) { document.getElementById(tid).remove(); this.showToast("API 错误"); console.error(e); c.insertAdjacentHTML('beforeend', `<div class="text-red-500 text-xs p-4 text-center w-fit">Error: ${e.message}</div>`); } },
             regenerateResponse() { const adv = this.data.find(a => a.id === this.currentId); if (!adv || !adv.chatHistory || adv.chatHistory.length === 0) return; const last = adv.chatHistory[adv.chatHistory.length - 1]; if (last.role === 'ai') { adv.chatHistory.pop(); this.saveToLocal(); this.renderChat(); } this.generateAIResponse(); },
-            deleteAdventure(id) { this.data = this.data.filter(a => a.id !== id); this.saveToLocal(); if (this.data.length === 0) this.createNewAdventure(); else { if (id === this.currentId) this.loadAdventure(this.data[0].id); else this.renderAdventureList(); } this.showToast("存档已删除"); },
+            // V45: Delete Confirmation
+            deleteAdventure(id) { if(!confirm("⚠️ 警告：确定要删除这个存档吗？\n删除后无法恢复！")) return; this.data = this.data.filter(a => a.id !== id); this.saveToLocal(); if (this.data.length === 0) this.createNewAdventure(); else { if (id === this.currentId) this.loadAdventure(this.data[0].id); else this.renderAdventureList(); } this.showToast("存档已删除"); },
             loadAdventure(id) { this.currentId = id; const adv = this.data.find(a => a.id === id); if (!adv) return; ['title', 'charName', 'charDesc', 'firstMes', 'worldScenario', 'userPersona', 'jailbreak'].forEach(key => { const el = document.getElementById(`input-${key.replace(/[A-Z]/g, m => "-" + m.toLowerCase())}`); if(el) el.value = adv[key] || ""; }); this.renderAvatar('char', adv.charAvatar); this.renderAvatar('user', adv.userAvatar); this.renderAdventureList(); this.renderChat(); },
             handleImageUpload(i, t) { const f = i.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { this.updateData(t, e.target.result); this.renderAvatar(t === 'charAvatar' ? 'char' : 'user', e.target.result); }; r.readAsDataURL(f); i.value = ''; },
             renderAvatar(p, s) { const i = document.getElementById(`img-${p}-avatar`); const ph = document.getElementById(`ph-${p}-avatar`); if (s) { i.src = s; i.classList.remove('hidden'); ph.classList.add('hidden'); } else { i.src = ""; i.classList.add('hidden'); ph.classList.remove('hidden'); } },
