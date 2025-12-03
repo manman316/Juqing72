@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>控制台 (SETTINGS) - 黎梨 V71 永恆旋律版</title>
+    <title>控制台 (SETTINGS) - 黎梨 V79 調色修復版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- V71 核心变量 --- */
+        /* --- V79 核心变量 (修復變量名) --- */
         :root {
             --chat-font-size: 15px;
             --chat-line-height: 1.625;
-            --chat-text-color: #c0caf5; /* 默认颜色 */
+            --chat-color: #c0caf5; /* [V79] 統一變量名 */
             --chat-font-weight: 300;
             --theme-orange: #ff9e64; 
         }
 
-        /* CSS Firewall */
         body { 
             font-family: 'Noto Sans SC', sans-serif; 
             background-color: #000 !important; 
@@ -27,28 +26,56 @@
             -webkit-tap-highlight-color: transparent; 
         }
         
-        /* [V71 修复] 确保 CSS 变量能覆盖 !important */
-        .dynamic-text, .dynamic-text * {
+        /* [V78] 智能排版引擎 */
+        .ai-content-area {
+            width: 100%;
+            display: block; 
+        }
+
+        .dynamic-text {
             font-size: var(--chat-font-size);
             line-height: var(--chat-line-height);
-            color: var(--chat-text-color) !important; /* 这里绑定变量 */
             font-weight: var(--chat-font-weight);
+            color: var(--chat-color) !important; /* [V79] 綁定變量 */
+            white-space: pre-wrap; 
+            word-wrap: break-word;
+            text-align: left; 
             transition: all 0.2s ease;
         }
 
-        /* 卡片特权通道 */
-        .lq-scope-standalone, .lq-scope-standalone * { color: inherit; line-height: inherit; }
-        .lq-scope-standalone { margin-left: auto !important; margin-right: auto !important; margin-top: -20px !important; margin-bottom: -10px !important; display: block !important; width: calc(100% + 20px) !important; max-width: 400px !important; }
+        .ai-content-area > div, 
+        .ai-content-area > table,
+        .ai-content-area > img,
+        .ai-content-area > figure {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            display: block;
+            max-width: 100% !important;
+        }
+
+        /* [V79] 卡片樣式修復：顏色綁定變量 */
+        .ai-content-area div[style*="background"], 
+        .ai-content-area div[class*="card"] {
+            background-color: rgba(30, 32, 40, 0.6) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: var(--chat-color) !important; /* [V79] 關鍵修復：不再寫死顏色 */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important; 
+            border-radius: 8px !important;
+            white-space: normal !important; 
+            text-align: left;
+        }
         
+        .ai-content-area img {
+            filter: brightness(0.9);
+            border-radius: 4px;
+        }
+
         /* 封面 & 动画 */
         #view-cover { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1s ease-in-out, transform 1s ease-in-out; pointer-events: none; }
-        .cover-hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
-        
         .login-wrapper { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; margin-top: 8rem; pointer-events: auto; }
         #login-btn { position: relative; pointer-events: none; transition: transform 0.1s; }
         #login-hitbox { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; cursor: pointer; background: transparent; }
         #login-hitbox:active + #login-btn { transform: scale(0.95); }
-
         #aesthetic-title { position: absolute; top: 15%; right: 12%; writing-mode: vertical-rl; text-orientation: upright; font-family: 'Noto Serif SC', serif; color: rgba(255, 255, 255, 0.9); text-shadow: 2px 2px 8px rgba(0,0,0,0.6); display: flex; gap: 12px; height: 60%; flex-wrap: wrap-reverse; align-content: flex-start; pointer-events: none; }
         .title-line { font-size: 2rem; font-weight: 600; letter-spacing: 0.2em; transition: all 0.5s; }
         .title-line:nth-child(odd) { margin-top: 0; } .title-line:nth-child(even) { margin-top: 40px; }
@@ -88,23 +115,47 @@
         #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 9999; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; } #modal-overlay.active { display: flex; } .modal-card { background: rgba(31, 35, 53, 0.95); border: 1px solid rgba(65, 72, 104, 0.5); border-radius: 16px; width: 85%; max-width: 320px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); text-align: center; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); } #modal-overlay.active .modal-card { transform: scale(1); }
         #login-hitbox { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; cursor: pointer; background: transparent; pointer-events: auto; }
 
-        /* --- V69.1 Music Widget --- */
-        #music-widget-min {
-            position: fixed; right: 10px; top: 20%; width: 70px; height: 70px; z-index: 60000; cursor: grab; touch-action: none; transition: transform 0.1s;
-        }
+        /* --- Crystal Vinyl Widget --- */
+        #music-widget-min { position: fixed; right: 10px; top: 20%; width: 70px; height: 70px; z-index: 60000; cursor: grab; touch-action: none; transition: transform 0.1s; display: none; }
         #music-widget-min:active { cursor: grabbing; transform: scale(0.95); }
-        .vinyl-base { width: 100%; height: 100%; border-radius: 50%; background: var(--theme-orange); box-shadow: 0 8px 25px rgba(0,0,0,0.7); position: relative; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        #music-widget-min.playing .vinyl-base { animation: breathe-beat 1.5s infinite ease-in-out alternate; }
-        @keyframes breathe-beat { 0% { transform: scale(1); box-shadow: 0 8px 25px rgba(0,0,0,0.7); } 100% { transform: scale(1.05); box-shadow: 0 10px 35px rgba(255, 158, 100, 0.4); } }
-        .vinyl-body { width: 70%; height: 70%; border-radius: 50%; background: #111; background-image: repeating-radial-gradient(#111 0, #111 2px, #222 3px, #222 4px); position: relative; display: flex; align-items: center; justify-content: center; animation: spin 4s linear infinite; animation-play-state: paused; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+        .vinyl-base { 
+            width: 100%; height: 100%; border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
+            position: relative; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; 
+        }
+        #music-widget-min.playing .vinyl-base { animation: breathe-beat 1.5s infinite ease-in-out alternate; box-shadow: 0 0 20px rgba(255, 158, 100, 0.3); border-color: rgba(255, 158, 100, 0.4); }
+        @keyframes breathe-beat { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+        
+        .vinyl-body { 
+            width: 70%; height: 70%; border-radius: 50%; 
+            background: rgba(0,0,0,0.5); 
+            background-image: repeating-radial-gradient(rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 2px, transparent 3px, transparent 4px); 
+            position: relative; display: flex; align-items: center; justify-content: center; 
+            animation: spin 4s linear infinite; animation-play-state: paused; 
+        }
         #music-widget-min.playing .vinyl-body { animation-play-state: running; }
-        .vinyl-reflection { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(transparent 0deg, rgba(255,255,255,0.1) 40deg, rgba(255,255,255,0.3) 50deg, rgba(255,255,255,0.1) 60deg, transparent 100deg, transparent 180deg, rgba(255,255,255,0.1) 220deg, rgba(255,255,255,0.3) 230deg, rgba(255,255,255,0.1) 240deg, transparent 280deg); opacity: 0.7; pointer-events: none; }
-        .vinyl-label { width: 35%; height: 35%; border-radius: 50%; background: var(--theme-orange); border: 4px solid #111; position: relative; }
-        .vinyl-label::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 6px; height: 6px; background: #000; border-radius: 50%; }
+        
+        .vinyl-reflection { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(transparent 0deg, rgba(255,255,255,0.2) 40deg, rgba(255,255,255,0.4) 50deg, rgba(255,255,255,0.2) 60deg, transparent 100deg, transparent 180deg, rgba(255,255,255,0.2) 220deg, rgba(255,255,255,0.4) 230deg, rgba(255,255,255,0.2) 240deg, transparent 280deg); opacity: 0.8; pointer-events: none; }
+        .vinyl-label { width: 35%; height: 35%; border-radius: 50%; background: var(--theme-orange); border: 2px solid rgba(255,255,255,0.2); position: relative; opacity: 0.8; }
+        .vinyl-label::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 6px; height: 6px; background: rgba(255,255,255,0.8); border-radius: 50%; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Expanded Player */
-        #music-widget-max { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 320px; height: auto; background: rgba(20, 20, 25, 0.85); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; box-shadow: 0 30px 80px rgba(0,0,0,0.8); z-index: 60001; opacity: 0; pointer-events: none; display: flex; flex-direction: column; padding: 20px; transition: all 0.3s ease; }
+        /* Transparent Glass Player */
+        #music-widget-max { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); 
+            width: 320px; height: auto; 
+            background: rgba(20, 20, 25, 0.25); 
+            backdrop-filter: blur(40px); 
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 24px; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5); 
+            z-index: 60001; opacity: 0; pointer-events: none; 
+            display: flex; flex-direction: column; padding: 20px; transition: all 0.3s ease; 
+        }
         #music-widget-max.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
         .player-stage { position: relative; width: 100%; height: 140px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
         .album-art { width: 140px; height: 140px; border-radius: 12px; background-color: #222; background-size: cover; background-position: center; position: relative; z-index: 10; box-shadow: 0 15px 35px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s ease; }
@@ -130,16 +181,107 @@
         .upload-row { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #565f89; }
         .add-music { cursor: pointer; display: flex; align-items: center; gap: 5px; transition: color 0.2s; }
         .add-music:hover { color: var(--theme-orange); }
-        .playlist-box { max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 8px; margin-top: 10px; padding: 5px; min-height: 50px; }
+        .playlist-box { max-height: 120px; overflow-y: auto; background: rgba(0,0,0,0.1); border-radius: 8px; margin-top: 10px; padding: 5px; min-height: 50px; border: 1px solid rgba(255,255,255,0.05); }
         .p-item { padding: 8px; border-radius: 4px; color: #888; cursor: pointer; display: flex; justify-content: space-between; font-size: 11px; align-items: center; }
-        .p-item:hover { background: rgba(255,255,255,0.05); color: #c0caf5; }
-        .p-item.active { color: var(--theme-orange); font-weight: bold; background: rgba(255,158,100,0.05); }
+        .p-item:hover { background: rgba(255,255,255,0.1); color: #c0caf5; }
+        .p-item.active { color: var(--theme-orange); font-weight: bold; background: rgba(255,158,100,0.1); }
+
+        /* --- TRANSPARENT PHONE STYLES --- */
+        #phone-overlay-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            z-index: 499; display: none; opacity: 0; transition: opacity 0.3s ease;
+        }
+        #phone-overlay-backdrop.active { display: block; opacity: 1; pointer-events: auto; }
+
+        #view-phone { 
+            position: fixed; 
+            top: 50%; left: 50%; 
+            width: 340px; height: 680px; 
+            transform: translate(-50%, -40%) scale(0.8); 
+            z-index: 500; 
+            display: none; flex-direction: column; 
+            opacity: 0; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            pointer-events: none;
+            border-radius: 45px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 8px #1f2335; 
+            overflow: hidden;
+            background: transparent;
+        }
+
+        #view-phone.active { 
+            display: flex; opacity: 1; 
+            transform: translate(-50%, -50%) scale(1); 
+            pointer-events: auto; 
+        }
+        
+        .phone-notch {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 30px; 
+            background: #1f2335; 
+            border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+            z-index: 50; pointer-events: none;
+        }
+
+        .phone-frame {
+            position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden;
+            background-color: rgba(20, 20, 25, 0.2); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        .ios-status-bar { height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; color: white; font-size: 12px; font-weight: 600; z-index: 20; margin-top: 5px;}
+        
+        .ios-nav-bar { 
+            height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 20; 
+            background: rgba(245, 245, 247, 0.1); 
+            border-bottom: 0.5px solid rgba(255,255,255,0.1); 
+            backdrop-filter: blur(20px); 
+        }
+        
+        .ios-chat-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 10; padding-bottom: 20px; }
+        .ios-bubble { max-width: 80%; padding: 8px 14px; font-size: 14px; line-height: 1.4; position: relative; word-wrap: break-word; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        .ios-bubble .delete-btn {
+            position: absolute; top: -8px; right: -8px; width: 18px; height: 18px; background: #ff3b30; color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 50;
+        }
+        .ios-bubble:hover .delete-btn { display: flex; }
+
+        .ios-bubble-user { align-self: flex-end; background-color: #34c759; color: white; border-radius: 18px 18px 0 18px; margin-right: 4px; }
+        .ios-bubble-user::after { content: ""; position: absolute; bottom: 0; right: -4px; width: 10px; height: 10px; background: inherit; border-bottom-left-radius: 10px; clip-path: polygon(0 0, 0% 100%, 100% 100%); }
+        
+        .ios-bubble-other { align-self: flex-start; background-color: #e9e9eb; color: #000; border-radius: 18px 18px 18px 0; margin-left: 4px; }
+        .ios-bubble-other::after { content: ""; position: absolute; bottom: 0; left: -4px; width: 10px; height: 10px; background: inherit; border-bottom-right-radius: 10px; clip-path: polygon(100% 0, 0% 100%, 100% 100%); transform: scaleX(-1); }
+
+        .ios-timestamp { text-align: center; color: rgba(255,255,255,0.5); font-size: 10px; margin: 12px 0 4px 0; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        
+        .ios-input-area { 
+            background: rgba(30, 30, 30, 0.5); backdrop-filter: blur(20px); 
+            border-top: 0.5px solid rgba(255,255,255,0.1); 
+            padding: 10px 12px; padding-bottom: 20px; 
+            display: flex; align-items: flex-end; gap: 10px; z-index: 20; 
+        }
+        .ios-input-field { background: #ffffff; border-radius: 20px; padding: 9px 12px; color: #000; font-size: 15px; max-height: 80px; width: 100%; outline: none; resize: none; }
+        .ios-send-btn { width: 34px; height: 34px; border-radius: 50%; background: #34c759; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; margin-bottom: 2px; transition: transform 0.1s; cursor: pointer; }
+        .ios-send-btn:active { transform: scale(0.9); }
+
+        #phone-badge { position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; background: #ff3b30; border-radius: 50%; border: 2px solid #1f2335; color: white; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; pointer-events: none; opacity: 0; transform: scale(0); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        #phone-badge.show { opacity: 1; transform: scale(1); }
+
+        .typing-bubble { align-self: flex-start; background-color: #e9e9eb; border-radius: 18px 18px 18px 0; margin-left: 4px; padding: 12px 16px; display: flex; gap: 4px; width: fit-content; margin-bottom: 10px; position: relative; }
+        .typing-bubble::after { content: ""; position: absolute; bottom: 0; left: -4px; width: 10px; height: 10px; background: inherit; border-bottom-right-radius: 10px; clip-path: polygon(100% 0, 0% 100%, 100% 100%); transform: scaleX(-1); }
+        .typing-dot { width: 6px; height: 6px; background: #8e8e93; border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
     </style>
 </head>
 <body class="h-screen flex flex-col w-full text-sm relative" ontouchstart="App.unlockAudioEngine()" onclick="App.unlockAudioEngine()">
 
     <audio id="startup-audio" playsinline preload="auto"></audio>
     <audio id="bgm-player" playsinline preload="auto"></audio>
+    <audio id="phone-notification-sound" src="data:audio/wav;base64,UklGRn4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV4AAAAAAAABAAAAAQAAAAEAAAABAAEAAQABAAIAAgACAAIAAwADAAMAAwAEAAQABAAFAAUABQAFAAYABgAGAAcABwAHAAgACAAIAAkACQAJAAoACgAKAAoACwALAAwADAA="></audio>
 
     <!-- VIEW 0: COVER -->
     <div id="view-cover">
@@ -148,7 +290,7 @@
         <div class="login-wrapper"><div id="login-hitbox" onclick="App.tryUnlock()"></div><div id="login-btn" class="w-16 h-16 rounded-full border border-white/30 bg-white/10 backdrop-blur-md flex items-center justify-center relative overflow-hidden"><i class="fa-solid fa-fingerprint text-2xl text-white/80 group-hover:text-white"></i><div id="scan-line" class="scan-line"></div></div></div>
         <p id="login-text" class="text-[10px] text-gray-400 tracking-widest uppercase font-serif mt-4 pointer-events-auto cursor-pointer" onclick="App.tryUnlock()">Touch ID</p>
         <div id="keypad-overlay"><div class="mb-10 flex gap-4 transform scale-110"><div class="pin-dot" id="dot-1"></div><div class="pin-dot" id="dot-2"></div><div class="pin-dot" id="dot-3"></div><div class="pin-dot" id="dot-4"></div></div><div class="grid grid-cols-3 gap-x-8 gap-y-6"><div class="key-btn" onclick="App.inputPin(1)">1</div><div class="key-btn" onclick="App.inputPin(2)">2</div><div class="key-btn" onclick="App.inputPin(3)">3</div><div class="key-btn" onclick="App.inputPin(4)">4</div><div class="key-btn" onclick="App.inputPin(5)">5</div><div class="key-btn" onclick="App.inputPin(6)">6</div><div class="key-btn" onclick="App.inputPin(7)">7</div><div class="key-btn" onclick="App.inputPin(8)">8</div><div class="key-btn" onclick="App.inputPin(9)">9</div><div class="key-btn text-xl" onclick="App.cancelPin()"><i class="fa-solid fa-arrow-left"></i></div><div class="key-btn" onclick="App.inputPin(0)">0</div><div class="key-btn text-xl" onclick="App.clearPin()"><i class="fa-solid fa-delete-left"></i></div></div><div class="mt-12 text-white/40 text-[10px] tracking-[0.3em] font-serif">VERIFICATION REQUIRED</div></div>
-        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50 cursor-pointer pointer-events-auto" onclick="App.tryUnlock()">SYSTEM V71.0 ETERNAL MELODY</div>
+        <div class="absolute bottom-8 text-[10px] text-gray-500 tracking-widest font-serif opacity-50 cursor-pointer pointer-events-auto" onclick="App.tryUnlock()">SYSTEM V79 ETERNAL MELODY</div>
     </div>
 
     <!-- Background -->
@@ -180,8 +322,49 @@
         </div>
         <div id="playlist-box" class="playlist-box custom-scroll"><div class="text-center text-[#565f89] text-[10px] py-2">暫無播放列表</div></div>
     </div>
+    
+    <!-- [V73] Floating Phone Structure -->
+    <div id="phone-overlay-backdrop" onclick="App.togglePhone()"></div>
+    <div id="view-phone">
+        <div class="phone-notch"></div>
+        <div class="phone-frame">
+            <div class="ios-status-bar">
+                <span id="ios-clock">00:00</span>
+                <div class="flex gap-1.5 items-center">
+                    <i class="fa-solid fa-signal"></i>
+                    <i class="fa-solid fa-wifi"></i>
+                    <i class="fa-solid fa-battery-half"></i>
+                </div>
+            </div>
+            <div class="ios-nav-bar">
+                <div class="flex items-center gap-1 text-[#0a84ff] cursor-pointer" onclick="App.togglePhone()">
+                    <i class="fa-solid fa-chevron-left text-lg"></i>
+                    <span class="text-[16px]">Chats</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="flex items-center gap-2">
+                        <img id="ios-header-avatar" class="w-6 h-6 rounded-full object-cover bg-gray-500 border border-white/20">
+                        <span id="ios-contact-name" class="font-bold text-[14px] text-white shadow-sm">Contact</span>
+                    </div>
+                </div>
+                <div class="w-10 flex justify-end"><i class="fa-solid fa-video text-[#0a84ff]/50"></i></div>
+            </div>
+            
+            <div id="ios-chat-container" class="ios-chat-container custom-scroll">
+                <div class="text-center mt-4 opacity-50 text-[10px] text-white">iMessage with <span id="ios-contact-name-hint">Char</span></div>
+            </div>
+            
+            <div class="ios-input-area">
+                <i class="fa-solid fa-camera text-gray-400 text-xl mb-2"></i>
+                <textarea id="ios-chat-input" class="ios-input-field custom-scroll" placeholder="iMessage" rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+                <div class="ios-send-btn" onclick="App.sendPhoneMessage()">
+                    <i class="fa-solid fa-arrow-up text-sm font-bold"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- DASHBOARD & SETTINGS & CHAT (Structure Same as V70, logic updated) -->
+    <!-- DASHBOARD & SETTINGS & CHAT -->
     <div id="view-dashboard" class="view-container view-hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm -z-10"></div>
         <header class="h-14 bg-[#1f2335]/70 backdrop-blur-md flex items-center justify-between px-4 border-b border-[#16161e]/50 shrink-0 z-50 shadow-sm">
@@ -295,14 +478,13 @@
             <div class="setting-row"><span class="setting-label">行距</span><div class="setting-btn-group w-32"><div class="setting-btn" onclick="App.updateAppearance('lineHeight', '1.4')">密</div><div class="setting-btn active" onclick="App.updateAppearance('lineHeight', '1.625')" data-val="1.625">適</div><div class="setting-btn" onclick="App.updateAppearance('lineHeight', '2.0')">寬</div></div></div>
             <div class="setting-row"><span class="setting-label">濃度</span><div class="setting-btn-group w-32"><div class="setting-btn active" onclick="App.updateAppearance('fontWeight', '300')" data-mode="normal">标准</div><div class="setting-btn" onclick="App.updateAppearance('fontWeight', '400')">加粗</div></div></div>
             <div class="setting-row">
-                <span class="setting-label">颜色</span>
+                <span class="setting-label">顏色</span>
                 <div class="flex items-center gap-2">
                     <div class="setting-btn-group flex-1">
                         <div class="setting-btn active" onclick="App.updateAppearance('color', '#c0caf5')">蓝灰</div>
                         <div class="setting-btn" onclick="App.updateAppearance('color', '#ffffff')">纯白</div>
                         <div class="setting-btn" onclick="App.updateAppearance('color', '#e0af68')">金沙</div>
                     </div>
-                    <!-- [V71 Fix] Value binding logic upgraded -->
                     <input type="color" id="color-picker" value="#c0caf5" oninput="App.updateAppearance('color', this.value)">
                 </div>
             </div>
@@ -318,6 +500,12 @@
         <div class="p-3 bg-[#1a1b26]/70 backdrop-blur-xl border-t border-[#16161e]/30 shrink-0">
             <div class="flex justify-end mb-2 gap-2">
                 <span id="input-name-display" class="text-[10px] text-[#7a85b8] self-center mr-auto ml-2 font-mono" onclick="App.renameIdentity()">YOU</span>
+                
+                <button onclick="App.togglePhone()" class="relative text-[12px] text-[#565f89] hover:text-[#ff9e64] border border-[#2f334d] rounded px-3 py-1 bg-[#1f2335]/50 flex items-center gap-1.5 transition-all">
+                    <i class="fa-solid fa-mobile-screen-button"></i> 
+                    <div id="phone-badge">1</div>
+                </button>
+
                 <button onclick="App.sendHiddenContinue()" class="text-[10px] text-[#565f89] hover:text-[#ff9e64] border border-[#2f334d] rounded px-2 py-1 bg-[#1f2335]/50 flex items-center gap-1"><i class="fa-solid fa-forward"></i> ⏩ 續寫</button>
             </div>
             <div class="relative flex items-center gap-2">
@@ -338,16 +526,14 @@
     <div id="toast-container" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-[200]"></div>
 
     <script>
-        /* [V71] DB Upgrade: Added 'tracks' store for music persistence */
         const AssetDB = {
             db: null,
             init() { 
                 return new Promise((res, rej) => { 
-                    const r = indexedDB.open("RP_Assets_DB", 3); // Ver bumped to 3
+                    const r = indexedDB.open("RP_Assets_DB", 3); 
                     r.onupgradeneeded = (e) => { 
                         const d = e.target.result; 
                         if (!d.objectStoreNames.contains("assets")) d.createObjectStore("assets"); 
-                        // V71 New Store for Music
                         if (!d.objectStoreNames.contains("tracks")) {
                             d.createObjectStore("tracks", { keyPath: "id" });
                         }
@@ -359,8 +545,6 @@
             async save(k, d) { if (!this.db) await this.init(); return new Promise((res, rej) => { const tx = this.db.transaction(["assets"], "readwrite"); tx.objectStore("assets").put(d, k); tx.oncomplete = res; tx.onerror = rej; }); },
             async get(k) { if (!this.db) await this.init(); return new Promise((res, rej) => { const tx = this.db.transaction(["assets"], "readonly"); const r = tx.objectStore("assets").get(k); r.onsuccess = () => res(r.result); r.onerror = rej; }); },
             async delete(k) { if (!this.db) await this.init(); return new Promise((res, rej) => { const tx = this.db.transaction(["assets"], "readwrite"); tx.objectStore("assets").delete(k); tx.oncomplete = res; }); },
-            
-            /* [V71] Track Methods */
             async saveTrack(track) {
                 if (!this.db) await this.init();
                 return new Promise((res, rej) => {
@@ -400,14 +584,13 @@
                 this.audio = document.getElementById('bgm-player');
                 this.audio.onended = () => this.next();
                 this.makeDraggable();
-                await this.loadPlaylistFromDB(); // [V71] Load persisted tracks
+                await this.loadPlaylistFromDB(); 
             },
 
             async loadPlaylistFromDB() {
                 try {
                     const savedTracks = await AssetDB.getAllTracks();
                     if (savedTracks && savedTracks.length > 0) {
-                        // Rehydrate blobs to URLs
                         this.tracks = savedTracks.map(t => ({
                             id: t.id,
                             name: t.name,
@@ -456,9 +639,8 @@
                     let thumb = null;
                     if (f.type.startsWith('video/')) { thumb = await this.extractVideoThumb(f); }
                     
-                    // [V71] Persist to DB
                     const trackId = Date.now() + Math.random().toString();
-                    const trackData = { id: trackId, name: f.name, blob: f, thumb: thumb }; // Store raw File object (Blob)
+                    const trackData = { id: trackId, name: f.name, blob: f, thumb: thumb }; 
                     await AssetDB.saveTrack(trackData);
                     
                     const url = URL.createObjectURL(f);
@@ -509,29 +691,17 @@
             
             async clearAll() {
                 this.pause();
-                // Clear DB
                 for (let t of this.tracks) { await AssetDB.deleteTrack(t.id); }
                 this.tracks = [];
                 this.currentIdx = 0;
                 this.updateUI();
             },
 
-            // [V71] Rename Logic
             async rename(idx) {
                 const t = this.tracks[idx];
                 const newName = prompt("重命名歌曲:", t.name);
                 if (newName && newName.trim() !== "") {
                     t.name = newName.trim();
-                    // Update DB: We need to re-save the whole object (blob included) or use cursor update. 
-                    // Simplest way: get from DB, update name, put back.
-                    // Since we don't have the original blob in memory array (only URL), 
-                    // we just assume AssetDB.saveTrack will overwrite by ID. 
-                    // WAIT: 'tracks' array only has URL. We need to fetch blob again to save? 
-                    // No, IndexedDB update is just PUT. But we need the blob. 
-                    // Optimization: We won't re-fetch blob. We assume user just wants UI rename.
-                    // Real solution: Update only 'name' field in DB? IndexedDB needs full object put.
-                    // Let's do a trick: We fetch the specific track from DB, update name, put back.
-                    // This is safest.
                     const dbTrack = await new Promise((res) => {
                         const tx = AssetDB.db.transaction(["tracks"], "readonly");
                         const r = tx.objectStore("tracks").get(t.id);
@@ -583,7 +753,6 @@
                     this.tracks.forEach((t, i) => {
                         const el = document.createElement('div');
                         el.className = `p-item ${i === this.currentIdx ? 'active' : ''}`;
-                        // [V71] Added click to play, pen to edit
                         el.innerHTML = `
                             <span class="truncate pr-2 flex-1" onclick="MusicPlayer.play(${i})">${i+1}. ${t.name}</span>
                             <div class="flex gap-2">
@@ -599,7 +768,7 @@
             async remove(idx) {
                 if (idx === this.currentIdx) this.pause();
                 const t = this.tracks[idx];
-                await AssetDB.deleteTrack(t.id); // [V71] Remove from DB
+                await AssetDB.deleteTrack(t.id); 
                 this.tracks.splice(idx, 1);
                 if (this.currentIdx >= this.tracks.length) this.currentIdx = 0;
                 this.updateUI();
@@ -610,8 +779,11 @@
             data: [], currentScriptId: null, currentSaveId: null, fsTargetId: null, editMsgIndex: null, currentPin: "", audioUnlocked: false,
             currentIdentity: "YOU", editingPersonaId: null, 
             dataLoaded: false,
+            phoneOpen: false,
 
             async init() {
+                document.getElementById('phone-notification-sound').src = "data:audio/wav;base64,UklGRn4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV4AAAAAAAABAAAAAQAAAAEAAAABAAEAAQABAAIAAgACAAIAAwADAAMAAwAEAAQABAAFAAUABQAFAAYABgAGAAcABwAHAAgACAAIAAkACQAJAAoACgAKAAoACwALAAwADAA="; 
+
                 const hitbox = document.getElementById('login-hitbox');
                 if(hitbox) {
                     const unlockFn = (e) => { e.preventDefault(); e.stopPropagation(); this.tryUnlock(); };
@@ -654,6 +826,11 @@
                 document.addEventListener('click', (e) => { if(!e.target.closest('#appearance-menu') && !e.target.closest('button[onclick="App.toggleAppearanceMenu()"]')) { document.getElementById('appearance-menu').classList.remove('show'); }});
                 this.updatePreviewThumb('bg_image', 'preview-bg'); this.updatePreviewThumb('cover_image', 'preview-cover'); this.updateAudioPreview();
                 this.showToast("SYSTEM READY");
+                
+                setInterval(() => {
+                    const now = new Date();
+                    document.getElementById('ios-clock').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+                }, 1000);
             },
 
             async saveToLocal() { if(!this.dataLoaded) { console.warn("Prevented overwrite: Data not loaded."); return; } try { await AssetDB.save('roleplay_saves_v50', this.data); } catch (e) { console.error(e); } },
@@ -714,19 +891,383 @@
             promptNewSave() { const script = this.data.find(s => s.id === this.currentScriptId); if (script.personas.length <= 1) { this.createNewSave(script.personas[0].id); } else { const list = document.getElementById('persona-select-list'); list.innerHTML = ''; script.personas.forEach(p => { const el = document.createElement('div'); el.className = "bg-[#1f2335] border border-[#2f334d] p-2 rounded flex flex-col items-center cursor-pointer hover:border-[#ff9e64] hover:bg-[#24283b]"; const img = p.avatar || "https://api.dicebear.com/7.x/initials/svg?seed=ME"; el.innerHTML = `<img src="${img}" class="w-8 h-8 rounded-full mb-1 object-cover"><span class="text-[10px] text-[#c0caf5] font-bold truncate w-full text-center">${p.name}</span>`; el.onclick = () => { document.getElementById('modal-overlay').classList.remove('active'); this.createNewSave(p.id); }; list.appendChild(el); }); document.getElementById('modal-overlay').classList.add('active'); } },
             createNewSave(personaId) { if (!this.currentScriptId) return; const script = this.data.find(s => s.id === this.currentScriptId); if(!script.saves) script.saves = []; if (!personaId && script.personas.length > 0) personaId = script.personas[0].id; const saveId = Date.now().toString(); const newSave = { id: saveId, title: `輪迴 #${script.saves.length + 1}`, timestamp: Date.now(), chatHistory: [], personaId: personaId }; script.saves.unshift(newSave); this.saveToLocal(); this.renderSaveList(); setTimeout(() => this.enterChat(saveId), 50); this.showToast("新輪迴開啟"); },
             renameSave(saveId) { if (!this.currentScriptId) return; const script = this.data.find(s => s.id === this.currentScriptId); const save = script.saves.find(s => s.id === saveId); if (save) { const newName = prompt("重命名此时间线：", save.title); if (newName && newName.trim() !== "") { save.title = newName.trim(); this.saveToLocal(); this.renderSaveList(); this.showToast("更名成功"); } } },
-            deleteSave(saveId) { if (!this.currentScriptId) return; const script = this.data.find(s => s.id === this.currentScriptId); if(!confirm("確定刪除？")) return; script.saves = script.saves.filter(s => s.id !== saveId); this.saveToLocal(); this.renderSaveList(); this.showToast("時間線已抹除"); },
+            deleteSave(saveId) { if (!this.currentScriptId) return; const script = this.data.find(s => s.id === this.currentScriptId); if(!confirm("確定刪除？")) return; script.saves = script.saves.filter(s => s.id !== saveId); this.saveToLocal(); 
+this.renderSaveList(); this.showToast("時間線已抹除"); },
             deleteScript(id) { if(!confirm("確定刪除劇本？此操作不可逆！")) return; this.data = this.data.filter(s => s.id !== id); this.saveToLocal(); this.renderScriptList(); this.showToast("剧本已销毁"); },
-            enterSettings() { document.getElementById('view-dashboard').classList.add('view-hidden'); document.getElementById('view-chat').classList.add('view-hidden'); document.getElementById('view-settings').classList.remove('view-hidden'); this.renderSaveList(); },
-            enterDashboard() { document.getElementById('view-settings').classList.add('view-hidden'); document.getElementById('view-chat').classList.add('view-hidden'); document.getElementById('view-dashboard').classList.remove('view-hidden'); this.currentScriptId = null; this.renderScriptList(); this.switchTab('adventure'); },
+            
+            closePhone() {
+                this.phoneOpen = false;
+                document.getElementById('view-phone').classList.remove('active');
+                document.getElementById('phone-overlay-backdrop').classList.remove('active');
+                document.getElementById('ios-chat-input').blur(); 
+                document.getElementById('ios-chat-container').innerHTML = '';
+            },
+
+            togglePhone() {
+                const el = document.getElementById('view-phone');
+                const bd = document.getElementById('phone-overlay-backdrop');
+                
+                this.phoneOpen = !this.phoneOpen;
+                
+                if(this.phoneOpen) {
+                    el.classList.add('active');
+                    bd.classList.add('active');
+                    this.renderPhoneChat(); 
+                    
+                    document.getElementById('phone-badge').classList.remove('show');
+                } else {
+                    this.closePhone();
+                }
+            },
+
+            enterSettings() { 
+                this.closePhone();
+                document.getElementById('view-dashboard').classList.add('view-hidden'); 
+                document.getElementById('view-chat').classList.add('view-hidden'); 
+                document.getElementById('view-settings').classList.remove('view-hidden'); 
+                this.renderSaveList(); 
+            },
+            enterDashboard() { 
+                this.closePhone();
+                document.getElementById('view-settings').classList.add('view-hidden'); 
+                document.getElementById('view-chat').classList.add('view-hidden'); 
+                document.getElementById('view-dashboard').classList.remove('view-hidden'); 
+                this.currentScriptId = null; 
+                this.renderScriptList(); 
+                this.switchTab('adventure'); 
+            },
             backToSettings() { this.enterSettings(); },
-            enterChat(saveId) { this.currentSaveId = saveId; document.getElementById('view-settings').classList.add('view-hidden'); document.getElementById('view-chat').classList.remove('view-hidden'); this.renderChat(); const c = document.getElementById('chat-container'); setTimeout(() => c.scrollTop = c.scrollHeight, 50); },
+            
+            enterChat(saveId) { 
+                this.closePhone();
+                this.currentSaveId = saveId; 
+                document.getElementById('view-settings').classList.add('view-hidden'); 
+                document.getElementById('view-chat').classList.remove('view-hidden'); 
+                this.renderChat(); 
+                const c = document.getElementById('chat-container'); 
+                setTimeout(() => c.scrollTop = c.scrollHeight, 50); 
+            },
+
             renderScriptList() { const l = document.getElementById('script-list'); l.innerHTML = ''; if(!this.data) return; this.data.forEach(script => { const el = document.createElement('div'); el.className = `bg-[#1f2335]/60 backdrop-blur-sm border border-[#292e42]/50 rounded-lg p-3 cursor-pointer relative group hover:border-[#414868] transition-all`; el.onclick = () => { this.currentScriptId = script.id; this.loadScriptSettings(script.id); this.enterSettings(); }; el.innerHTML = `<div class="flex justify-between items-center"><div class="flex-1"><h3 class="font-bold text-[#c0caf5] text-sm mb-1">${script.title || '未命名劇本'}</h3><p class="text-xs text-[#565f89]">${script.charName || '未知角色'} · ${script.saves ? script.saves.length : 0} 個輪迴</p></div><div class="flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[#565f89]"></i></div><button onclick="event.stopPropagation(); App.deleteScript('${script.id}')" class="absolute right-2 top-2 text-[#565f89] hover:text-red-400 p-2 hidden group-hover:block"><i class="fa-solid fa-trash-can pointer-events-none"></i></button></div>`; l.appendChild(el); }); },
             renderSaveList() { const l = document.getElementById('save-list'); l.innerHTML = ''; const script = this.data.find(s => s.id === this.currentScriptId); if (!script) return; if (!script.saves || script.saves.length === 0) { l.innerHTML = `<div class="text-center text-[#565f89] text-xs py-4">暂无时间线记录</div>`; return; } script.saves.forEach(save => { const el = document.createElement('div'); let personaName = "未知身份"; if (script.personas) { const p = script.personas.find(x => x.id === save.personaId); if (p) personaName = p.name; else if (!save.personaId && script.personas.length > 0) personaName = script.personas[0].name; } const lastMsg = save.chatHistory.length > 0 ? save.chatHistory[save.chatHistory.length-1].content.substring(0, 30) + "..." : "（新開局）"; const date = new Date(save.timestamp).toLocaleString(); el.className = `bg-[#16161e]/60 backdrop-blur-sm border border-[#2f334d]/50 rounded p-2 flex justify-between items-center hover:bg-[#1a1b26]/80 group`; el.innerHTML = `<div class="flex-1 cursor-pointer" onclick="App.enterChat('${save.id}')"><div class="flex items-center gap-2"><span class="text-[#c0caf5] text-xs font-bold">${save.title}</span><span class="text-[9px] px-1.5 rounded bg-[#3b4261] text-[#7aa2f7]">${personaName}</span></div><div class="text-[10px] text-[#787c99] mt-1 truncate pr-4">${lastMsg}</div></div><div class="flex gap-2"><button onclick="App.renameSave('${save.id}')" class="text-[#565f89] hover:text-[#ff9e64] p-2" title="重命名"><i class="fa-solid fa-pen"></i></button><button onclick="App.deleteSave('${save.id}')" class="text-[#565f89] hover:text-red-400 p-2" title="刪除"><i class="fa-solid fa-trash-can"></i></button></div>`; l.appendChild(el); }); },
             loadScriptSettings(id) { this.loadScriptSettings_Internal(id); },
             loadScriptSettings_Internal(id) { const script = this.data.find(s => s.id === id); if (!script) return; if (!script.personas || !Array.isArray(script.personas)) { script.personas = [{ id: 'p-'+Date.now(), name: "默認", desc: script.userPersona || "", avatar: script.userAvatar || "" }]; } ['title', 'charName', 'charDesc', 'firstMes', 'worldScenario', 'jailbreak'].forEach(key => { const el = document.getElementById(`input-${key.replace(/[A-Z]/g, m => "-" + m.toLowerCase())}`); if(el) el.value = script[key] || ""; }); this.renderAvatar('char', script.charAvatar); this.renderPersonaList(); },
             renameIdentity() { const newName = prompt("设置当前发言身份（例如：旁白、系统、神秘人）：", this.currentIdentity); if (newName && newName.trim() !== "") { this.currentIdentity = newName.trim(); document.getElementById('input-name-display').innerText = this.currentIdentity; } },
-            renderChat() { const script = this.data.find(s => s.id === this.currentScriptId); if(!script) return; const save = script.saves ? script.saves.find(s => s.id === this.currentSaveId) : null; if (!save) return; const c = document.getElementById('chat-container'); c.innerHTML = ''; if (script.firstMes) { this.appendChatBubble(script.firstMes, 'ai', -1); } if (save.chatHistory) save.chatHistory.forEach((msg, idx) => this.appendChatBubble(msg.content, msg.role, idx, msg.timestamp, msg.customName)); this.updateChatHeader(); },
-            async generateAIResponse() { const script = this.data.find(s => s.id === this.currentScriptId); const save = script.saves.find(s => s.id === this.currentSaveId); if (!script || !save) return; const s = JSON.parse(localStorage.getItem('roleplay_api_settings')); if (!s || !s.url || !s.key) { this.showToast("請先配置 API"); return; } let activePersona = null; if (script.personas) { activePersona = script.personas.find(p => p.id === save.personaId); } const userDesc = activePersona ? activePersona.desc : (script.userPersona || ""); let sysPrompt = [`[Character: ${script.charName}]`, `[Description: ${script.charDesc}]`, `[Scenario: ${script.worldScenario}]`, `[User: ${userDesc}]`, script.jailbreak].join('\n\n'); if (s.theatreMode) { sysPrompt += "\n\n[SYSTEM OVERRIDE: IMMERSIVE THEATRE MODE ACTIVE - TITANIUM EDITION]\nCRITICAL: You are now in High-Aesthetic Immersive Mode. For any content involving: SMS, Social Media, Status Screens, Letters, Inventory, or Small Scenes, you MUST NOT use plain text. You MUST render them as self-contained HTML/CSS Cards using the <div class='lq-scope-standalone'> wrapper.\n\n[Design Requirement]: The output MUST be visually stunning, using gradients, glassmorphism (backdrop-blur), and elegant typography. DO NOT output raw Markdown for these scenes. Force usage of HTML/CSS.\n\n[Behavior]: Be creative, poetic, and immersive."; } let hist = []; const isGemini = s.url.includes('googleapis'); const contextLimit = parseInt(s.context) || 20; const recentHistory = save.chatHistory.slice(-contextLimit); if (isGemini) { if(script.firstMes) hist.push({ role: 'model', parts: [{ text: script.firstMes }] }); recentHistory.forEach(msg => hist.push({ role: msg.role === 'user' ? 'user' : 'model', parts: [{ text: (msg.customName ? `[Identity: ${msg.customName}] ` : "") + msg.content }] })); } else { hist.push({ role: "system", content: sysPrompt }); if(script.firstMes) hist.push({ role: "assistant", content: script.firstMes }); recentHistory.forEach(msg => hist.push({ role: msg.role === 'user' ? 'user' : 'assistant', content: (msg.customName ? `[Identity: ${msg.customName}] ` : "") + msg.content })); } const c = document.getElementById('chat-container'); const tid = 'thinking-' + Date.now(); c.insertAdjacentHTML('beforeend', `<div id="${tid}" class="flex gap-3 animate-pulse"><div class="w-8 h-8 rounded-full bg-gray-700 shrink-0"></div><div class="bg-[#24283b] bg-opacity-60 backdrop-blur-md border border-[#2f334d] text-gray-400 p-3 text-sm rounded-r-xl rounded-bl-xl w-fit">Thinking...</div></div>`); c.scrollTop = c.scrollHeight; try { let fUrl, body, head = {}; if (isGemini) { let b = s.url.replace(/\/$/, ''); if (!b.includes('v1beta')) b += '/v1beta'; fUrl = `${b}/models/${s.model || 'gemini-1.5-flash'}:generateContent?key=${s.key}`; head = { 'Content-Type': 'application/json' }; body = JSON.stringify({ contents: hist, systemInstruction: { parts: [{ text: sysPrompt }] }, generationConfig: { temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, maxOutputTokens: parseInt(document.getElementById('disp-tokens').innerText)||65536 } }); } else { fUrl = `${s.url}/chat/completions`; head = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${s.key}` }; body = JSON.stringify({ model: s.model, messages: hist, temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, max_tokens: parseInt(document.getElementById('disp-tokens').innerText)||65536 }); } const res = await fetch(fUrl, { method: 'POST', headers: head, body }); if (!res.ok) throw new Error((await res.text())); const data = await res.json(); let reply = isGemini ? (data.candidates?.[0]?.content?.parts?.[0]?.text || "(No response)") : (data.choices?.[0]?.message?.content || "(No response)"); document.getElementById(tid).remove(); save.chatHistory.push({ role: 'ai', content: reply, timestamp: Date.now() }); save.timestamp = Date.now(); this.saveToLocal(); this.renderChat(); } catch (e) { document.getElementById(tid).remove(); this.showToast("API 錯誤"); console.error(e); c.insertAdjacentHTML('beforeend', `<div class="text-red-500 text-xs p-4 text-center w-fit">Error: ${e.message}</div>`); } },
+
+            async generateAIResponse(triggerSource = 'main') { 
+                const script = this.data.find(s => s.id === this.currentScriptId); 
+                const save = script.saves.find(s => s.id === this.currentSaveId); 
+                if (!script || !save) return; 
+
+                const s = JSON.parse(localStorage.getItem('roleplay_api_settings')); 
+                if (!s || !s.url || !s.key) { this.showToast("請先配置 API"); return; } 
+
+                let activePersona = null; 
+                if (script.personas) { activePersona = script.personas.find(p => p.id === save.personaId); } 
+                const userDesc = activePersona ? activePersona.desc : (script.userPersona || ""); 
+                
+                let sysPrompt = [`[Character: ${script.charName}]`, `[Description: ${script.charDesc}]`, `[Scenario: ${script.worldScenario}]`, `[User: ${userDesc}]`, script.jailbreak].join('\n\n'); 
+                
+                sysPrompt += `\n\n[SYSTEM: MOBILE PHONE INTERACTION PROTOCOL]
+                1. The User has a mobile phone. You (Character) have a mobile phone.
+                2. IF you want to send a text message (SMS/WeChat) to the User, you MUST enclose the message content in <sms> tags.
+                3. You can send MULTIPLE messages in a row by using multiple tags.
+                   Example: <sms>Where are you?</sms><sms>I am worried.</sms>
+                4. You can mix Narrative Action and SMS.
+                   Example: "He picked up his phone, hesitating." <sms>I'm sorry.</sms> "He put the phone down."
+                5. If the User sent you an SMS (marked as [SMS from User]), you should generally reply via <sms> tags, unless the plot dictates you ignore it or call them.
+                6. Be strictly immersive. If you are angry, send short, cold texts. If happy, use emojis.`;
+
+                let hist = []; 
+                let isGemini = s.url.includes('googleapis'); 
+                const contextLimit = parseInt(s.context) || 20; 
+                
+                const recentHistory = save.chatHistory.slice(-contextLimit).map(msg => {
+                    let content = msg.content;
+                    if (msg.role === 'user' && msg.isPhone) {
+                        content = `[SMS from User]: ${content}`;
+                    }
+                    else if (msg.role === 'user') {
+                        content = `${msg.customName || 'User'}: ${content}`;
+                    }
+                    return { role: msg.role === 'user' ? 'user' : (isGemini ? 'model' : 'assistant'), content: content };
+                });
+
+                if (isGemini) { 
+                    if(script.firstMes) hist.push({ role: 'model', parts: [{ text: script.firstMes }] }); 
+                    recentHistory.forEach(m => hist.push({ role: m.role, parts: [{ text: m.content }] })); 
+                } else { 
+                    hist.push({ role: "system", content: sysPrompt }); 
+                    if(script.firstMes) hist.push({ role: "assistant", content: script.firstMes }); 
+                    recentHistory.forEach(m => hist.push({ role: m.role, content: m.content })); 
+                } 
+
+                const c = document.getElementById('chat-container'); 
+                const tid = 'thinking-' + Date.now(); 
+                if(triggerSource === 'main') {
+                    c.insertAdjacentHTML('beforeend', `<div id="${tid}" class="flex gap-3 animate-pulse"><div class="w-8 h-8 rounded-full bg-gray-700 shrink-0"></div><div class="bg-[#24283b] bg-opacity-60 backdrop-blur-md border border-[#2f334d] text-gray-400 p-3 text-sm rounded-r-xl rounded-bl-xl w-fit">Thinking...</div></div>`); 
+                    c.scrollTop = c.scrollHeight; 
+                } else {
+                    const pc = document.getElementById('ios-chat-container');
+                    if(pc) {
+                        const existing = document.getElementById('ios-typing-bubble');
+                        if(existing) existing.remove();
+                        const typingHtml = `<div id="ios-typing-bubble" class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+                        pc.insertAdjacentHTML('beforeend', typingHtml);
+                        pc.scrollTop = pc.scrollHeight;
+                    }
+                }
+
+                try { 
+                    let fUrl, body, head = {}; 
+                    if (isGemini) { 
+                        let b = (s.url || 'https://generativelanguage.googleapis.com').replace(/\/$/, '');
+                        if (!b.includes('/v1beta')) b += '/v1beta';
+                        const modelName = s.model || 'gemini-1.5-flash';
+                        fUrl = `${b}/models/${modelName}:generateContent?key=${s.key}`;
+                        head = { 'Content-Type': 'application/json' }; 
+                        body = JSON.stringify({ contents: hist, systemInstruction: { parts: [{ text: sysPrompt }] }, generationConfig: { temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, maxOutputTokens: parseInt(document.getElementById('disp-tokens').innerText)||65536 } }); 
+                    } else { 
+                        let baseUrl = s.url.replace(/\/$/, ''); 
+                        if (baseUrl.endsWith('/chat/completions')) { fUrl = baseUrl; } else { fUrl = `${baseUrl}/chat/completions`; }
+                        head = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${s.key}` }; 
+                        body = JSON.stringify({ model: s.model, messages: hist, temperature: parseFloat(document.getElementById('disp-temp').innerText)||0.9, max_tokens: parseInt(document.getElementById('disp-tokens').innerText)||65536 }); 
+                    }
+                    
+                    const res = await fetch(fUrl, { method: 'POST', headers: head, body }); 
+                    if (!res.ok) { 
+                        const errText = await res.text();
+                        console.error('🔴 API 错误:', { status: res.status, error: errText });
+                        throw new Error(`API Error: ${res.status}`); 
+                    } 
+                    const data = await res.json(); 
+                    let reply = isGemini ? (data.candidates?.[0]?.content?.parts?.[0]?.text || "") : (data.choices?.[0]?.message?.content || ""); 
+
+                    if(document.getElementById(tid)) document.getElementById(tid).remove(); 
+                    
+                    this.processAIOutput(reply, script, save);
+
+                } catch (e) { 
+                    if(document.getElementById(tid)) document.getElementById(tid).remove(); 
+                    const pt = document.getElementById('ios-typing-bubble');
+                    if(pt) pt.remove();
+                    
+                    this.showToast(e.message || "API 錯誤"); 
+                    console.error(e); 
+                } 
+            },
+
+            processAIOutput(rawText, script, save) {
+                const pt = document.getElementById('ios-typing-bubble');
+                if(pt) pt.remove();
+
+                const smsRegex = /<sms>([\s\S]*?)<\/sms>/gi;
+                let match;
+                let smsFound = false;
+                let narrativeText = rawText; 
+
+                while ((match = smsRegex.exec(rawText)) !== null) {
+                    smsFound = true;
+                    const smsContent = match[1].trim();
+                    if(smsContent) {
+                        save.chatHistory.push({ 
+                            role: 'ai', 
+                            content: smsContent, 
+                            timestamp: Date.now(),
+                            isPhone: true 
+                        });
+                    }
+                }
+
+                narrativeText = rawText.replace(smsRegex, "").trim();
+
+                if (narrativeText.length > 0) {
+                    save.chatHistory.push({ 
+                        role: 'ai', 
+                        content: narrativeText, 
+                        timestamp: Date.now(),
+                        isPhone: false 
+                    });
+                }
+
+                save.timestamp = Date.now(); 
+                this.saveToLocal(); 
+
+                this.renderChat(); 
+                
+                if(this.phoneOpen) {
+                    this.renderPhoneChat();
+                }
+
+                if (smsFound) {
+                    this.triggerPhoneNotification();
+                }
+            },
+
+            sendUserMessage(contentOverride) { 
+                const i = document.getElementById('chat-input'); 
+                const t = contentOverride || i.value.trim(); 
+                if (!t || !this.currentScriptId || !this.currentSaveId) return; 
+                
+                const script = this.data.find(s => s.id === this.currentScriptId); 
+                const save = script.saves.find(s => s.id === this.currentSaveId); 
+                
+                save.chatHistory.push({ 
+                    role: 'user', 
+                    content: t, 
+                    timestamp: Date.now(), 
+                    customName: this.currentIdentity !== 'YOU' ? this.currentIdentity : null,
+                    isPhone: false 
+                }); 
+                
+                this.saveToLocal(); 
+                this.renderChat(); 
+                if(!contentOverride) i.value = ''; 
+                this.updateCharCount(i);
+                
+                this.generateAIResponse('main'); 
+            },
+
+            sendPhoneMessage() {
+                const input = document.getElementById('ios-chat-input');
+                const t = input.value.trim();
+                if(!t || !this.currentScriptId || !this.currentSaveId) return;
+
+                const script = this.data.find(s => s.id === this.currentScriptId); 
+                const save = script.saves.find(s => s.id === this.currentSaveId); 
+
+                save.chatHistory.push({ 
+                    role: 'user', 
+                    content: t, 
+                    timestamp: Date.now(),
+                    isPhone: true 
+                });
+
+                this.saveToLocal();
+                this.renderPhoneChat(); 
+                input.value = '';
+                input.style.height = 'auto';
+
+                this.generateAIResponse('phone');
+            },
+
+            // [V79] RENDER FIX: SEPARATE TEXT AND CARD LOGIC
+            renderChat() { 
+                const script = this.data.find(s => s.id === this.currentScriptId); if(!script) return; 
+                const save = script.saves ? script.saves.find(s => s.id === this.currentSaveId) : null; if (!save) return; 
+                
+                const c = document.getElementById('chat-container'); c.innerHTML = ''; 
+                
+                if (script.firstMes) { this.appendChatBubble(script.firstMes, 'ai', -1); } 
+                
+                if (save.chatHistory) {
+                    save.chatHistory.forEach((msg, idx) => {
+                        const isPhoneMsg = msg.isPhone === true; 
+                        if (!isPhoneMsg) {
+                            this.appendChatBubble(msg.content, msg.role, idx, msg.timestamp, msg.customName);
+                        }
+                    });
+                }
+                this.updateChatHeader(); 
+            },
+
+            // [V79] UPDATED BUBBLE FUNCTION
+            appendChatBubble(text, role, idx, timestamp = Date.now(), customName = null) { 
+                const script = this.data.find(s => s.id === this.currentScriptId); 
+                const save = script.saves.find(s => s.id === this.currentSaveId); 
+                const isUser = role === 'user'; 
+                
+                let avatar = "";
+                let name = "";
+                if (isUser) {
+                    let activePersona = null;
+                    if (save && script.personas) {
+                        activePersona = script.personas.find(p => p.id === save.personaId);
+                    }
+                    if (!activePersona && script.personas && script.personas.length > 0) activePersona = script.personas[0]; 
+                    
+                    avatar = activePersona ? (activePersona.avatar || "https://api.dicebear.com/7.x/initials/svg?seed=ME") : "https://api.dicebear.com/7.x/initials/svg?seed=ME";
+                    name = customName || (activePersona ? activePersona.name : "YOU");
+                } else {
+                    avatar = script.charAvatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gener";
+                    name = script.charName || "GM";
+                }
+
+                const date = new Date(timestamp); 
+                const timeStr = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`; 
+                let html = "";
+                
+                if (isUser) { 
+                    const bubbleColor = "bg-[#3d59a1]/80 backdrop-blur-md text-white"; 
+                    html = `<div class="flex flex-row-reverse gap-3 group message-group animate-fade-in-up relative mb-4" id="msg-${idx}"><img src="${avatar}" class="w-8 h-8 rounded-full mt-1 shrink-0 object-cover bg-[#1a1b26]/50 border border-[#2f334d]/50"><div class="flex flex-col gap-1 max-w-[85%] items-end relative"><div class="flex items-center gap-2"><span class="text-[10px] text-[#7aa2f7] font-bold">${name}</span><div class="msg-actions relative flex gap-3 mr-2"><button onclick="App.editMessage(${idx})" class="text-sm text-gray-500 hover:text-[#ff9e64] transition-colors cursor-pointer"><i class="fa-solid fa-pencil"></i></button>${idx !== -1 ? `<button onclick="App.deleteMessage(${idx})" class="text-sm text-gray-500 hover:text-red-400 transition-colors cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div><div class="${bubbleColor} p-2 px-3 text-sm rounded-l-xl rounded-br-xl shadow-sm relative z-10 w-fit"><div class="whitespace-pre-wrap break-words">${text}</div><span class="float-right text-[9px] opacity-50 ml-2 mt-1 select-none font-mono tracking-tighter">${timeStr}</span></div></div></div>`; 
+                } else { 
+                    // [V79] AI Message Layout: Centered & Full Width for Cards
+                    html = `
+                    <div class="flex flex-col gap-2 group message-group animate-fade-in-up relative mb-6 w-full items-center" id="msg-${idx}">
+                        <div class="flex items-center justify-between w-full px-1">
+                            <div class="flex items-center gap-3">
+                                <img src="${avatar}" class="w-8 h-8 rounded-full object-cover bg-[#1a1b26]/50 border border-[#414868]/50 shadow-sm">
+                                <span class="text-xs text-[#ff9e64] font-bold tracking-wider uppercase">${name}</span>
+                            </div>
+                            <div class="msg-actions flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="App.editMessage(${idx})" class="text-xs text-gray-500 hover:text-[#ff9e64]"><i class="fa-solid fa-pencil"></i></button>
+                                ${idx !== -1 ? `<button onclick="App.deleteMessage(${idx})" class="text-xs text-gray-500 hover:text-red-400"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                            </div>
+                        </div>
+                        <div class="ai-content-area dynamic-text">
+                            ${text}
+                        </div>
+                        <div class="text-[9px] text-[#565f89] font-mono opacity-30 self-end mr-2">${timeStr}</div>
+                    </div>`; 
+                }
+                document.getElementById('chat-container').insertAdjacentHTML('beforeend', html); 
+            },
+
+            renderPhoneChat() {
+                const script = this.data.find(s => s.id === this.currentScriptId);
+                const save = script ? script.saves.find(s => s.id === this.currentSaveId) : null;
+                if(!save) return;
+
+                const avatar = script.charAvatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gener";
+                document.getElementById('ios-header-avatar').src = avatar;
+                document.getElementById('ios-contact-name').innerText = script.charName || "Unknown";
+                
+                const hintEl = document.getElementById('ios-contact-name-hint');
+                if(hintEl) hintEl.innerText = script.charName || "Unknown";
+
+                const c = document.getElementById('ios-chat-container');
+                c.innerHTML = '<div class="text-center mt-4 mb-6 opacity-40 text-[10px] text-white">iMessage with <span id="ios-contact-name-hint" class="font-bold">' + (script.charName||'Char') + '</span></div>';
+
+                save.chatHistory.forEach((msg, globalIdx) => {
+                    if (msg.isPhone) {
+                        const isUser = msg.role === 'user';
+                        const div = document.createElement('div');
+                        div.className = `ios-bubble ${isUser ? 'ios-bubble-user' : 'ios-bubble-other'}`;
+                        div.innerHTML = `${msg.content.replace(/\n/g, '<br>')}<div class="delete-btn" onclick="App.deleteMessage(${globalIdx})"><i class="fa-solid fa-trash-can"></i></div>`;
+                        c.appendChild(div);
+                    }
+                });
+                
+                setTimeout(() => {
+                    c.scrollTop = c.scrollHeight;
+                }, 50);
+            },
+
+            triggerPhoneNotification() {
+                if(!this.phoneOpen) {
+                    const audio = document.getElementById('phone-notification-sound');
+                    if(audio) {
+                        audio.currentTime = 0;
+                        audio.volume = 0.5;
+                        audio.play().catch(e => console.log("Audio blocked", e));
+                    }
+                    document.getElementById('phone-badge').classList.add('show');
+                    this.showToast("收到新短信 ✉️");
+                } else {
+                    const c = document.getElementById('ios-chat-container');
+                    setTimeout(() => c.scrollTop = c.scrollHeight, 100);
+                }
+            },
             regenerateResponse() { const script = this.data.find(s => s.id === this.currentScriptId); const save = script.saves.find(s => s.id === this.currentSaveId); if (!script || !save) return; if (save.chatHistory.length === 0) return; const lastMsg = save.chatHistory[save.chatHistory.length - 1]; if (lastMsg.role === 'ai') { save.chatHistory.pop(); this.saveToLocal(); this.renderChat(); this.generateAIResponse(); } else { this.showToast("最後一條不是AI消息"); } },
             scrollToTop() { document.getElementById('chat-container').scrollTo({ top: 0, behavior: 'smooth' }); },
             scrollToBottom() { const c = document.getElementById('chat-container'); c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' }); },
@@ -739,7 +1280,11 @@
             async loadAudioSettings() { try { const a = document.getElementById('startup-audio'); const d = await AssetDB.get('custom_audio'); if (d) { a.src = URL.createObjectURL(d); a.load(); } else { a.src = "data:audio/wav;base64,UklGRl9vT1BXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"; } } catch(e) { console.error("Audio Load Fail", e); } },
             unlockAudioEngine() { if (this.audioUnlocked) return; const a = document.getElementById('startup-audio'); if(!a.src) return; a.volume = 0; a.play().then(() => { a.pause(); a.currentTime = 0; a.volume = 0.6; this.audioUnlocked = true; }).catch(()=>{}); },
             tryUnlock() { this.unlockAudioEngine(); document.getElementById('login-text').innerText = "Processing..."; try { const s = JSON.parse(localStorage.getItem('roleplay_api_settings')) || {}; if (s.passcode && s.passcode.length === 4) { document.getElementById('keypad-overlay').classList.add('active'); this.currentPin = ""; this.updatePinDots(); } else { this.performUnlock(); } } catch(e){ this.performUnlock(); } },
-            performUnlock() { const a = document.getElementById('startup-audio'); if(a) { a.currentTime = 0; a.volume = 0.6; a.play().catch(e => console.warn(e)); } this.animateScan(); },
+            performUnlock() { 
+                const a = document.getElementById('startup-audio'); if(a) { a.currentTime = 0; a.volume = 0.6; a.play().catch(e => console.warn(e)); } 
+                this.animateScan(); 
+                document.getElementById('music-widget-min').style.display = 'flex';
+            },
             inputPin(n) { if (this.currentPin.length < 4) { this.currentPin += n; this.updatePinDots(); if (this.currentPin.length === 4) setTimeout(() => this.checkPin(), 200); } },
             clearPin() { this.currentPin = this.currentPin.slice(0, -1); this.updatePinDots(); },
             cancelPin() { document.getElementById('keypad-overlay').classList.remove('active'); this.currentPin = ""; this.updatePinDots(); },
@@ -750,6 +1295,7 @@
             handleImageUpload(i, t) { const f = i.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { this.updateScriptData(t, e.target.result); this.renderAvatar(t === 'charAvatar' ? 'char' : 'user', e.target.result); }; r.readAsDataURL(f); i.value = ''; },
             renderAvatar(p, s) { if (p === 'user') return; const i = document.getElementById(`img-${p}-avatar`); const ph = document.getElementById(`ph-${p}-avatar`); if (s) { i.src = s; i.classList.remove('hidden'); ph.classList.add('hidden'); } else { i.src = ""; i.classList.add('hidden'); ph.classList.remove('hidden'); } },
             exportData() { const j = JSON.stringify(this.data, null, 2); const b = new Blob([j], {type: "application/json"}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `RP_V71_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); },
+
             importData(i) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = (e) => { try { const j = JSON.parse(e.target.result); if (Array.isArray(j)) { this.data = j; this.dataLoaded = true; this.saveToLocal(); this.renderScriptList(); alert(`成功導入 ${j.length} 個劇本！`); } else { alert("格式錯誤"); } } catch(e) { alert("解析失敗"); } }; r.readAsText(f); i.value = ''; },
             handleFileImport(i, t) { const f = i.files[0]; if (!f) return; const r = new FileReader(); r.onload = (e) => { const raw = e.target.result; try { const j = JSON.parse(raw); if (t === 'character') { if(j.name) { document.getElementById('input-char-name').value = j.name; this.updateScriptData('charName', j.name); } if(j.description) { document.getElementById('input-char-desc').value = j.description; this.updateScriptData('charDesc', j.description); } if(j.first_mes) { document.getElementById('input-first-mes').value = j.first_mes; this.updateScriptData('firstMes', j.first_mes); } this.showToast("导入成功"); } else if (t === 'world') { let x = j.entries ? j.entries.map(en => `[${en.keys}]: ${en.content}`).join('\n\n') : (j.world_scenario || JSON.stringify(j, null, 2)); const c = document.getElementById('input-world-scenario').value; const n = c ? c + "\n\n" + x : x; document.getElementById('input-world-scenario').value = n; this.updateScriptData('worldScenario', n); this.showToast("世界书追加"); } } catch (err) { if (t === 'world') { const c = document.getElementById('input-world-scenario').value; const n = c ? c + "\n\n" + raw : raw; document.getElementById('input-world-scenario').value = n; this.updateScriptData('worldScenario', n); this.showToast("文本追加"); } } }; r.readAsText(f); i.value = ''; },
             handleAudioUpload(i) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = async (e) => { const b = new Blob([e.target.result], { type: f.type }); await AssetDB.save('custom_audio', b); this.loadAudioSettings(); this.updateAudioPreview(); this.showToast("音效已更換"); setTimeout(()=>document.getElementById('startup-audio').play(), 500); }; r.readAsArrayBuffer(f); i.value = ''; },
@@ -769,12 +1315,12 @@
             openFullscreen(id, t) { this.fsTargetId = id; document.getElementById('fs-textarea').value = document.getElementById(id).value; document.getElementById('fs-title').innerText = "正在編輯: " + t; document.getElementById('fullscreen-editor').style.display = 'flex'; document.getElementById('fs-textarea').oninput = (e) => { document.getElementById(this.fsTargetId).value = e.target.value; document.getElementById(this.fsTargetId).dispatchEvent(new Event('input')); }; },
             closeFullscreen() { document.getElementById('fullscreen-editor').style.display = 'none'; this.fsTargetId = null; if (this.editMsgIndex !== null) { const script = this.data.find(s => s.id === this.currentScriptId); const save = script.saves.find(s => s.id === this.currentSaveId); if (script && save) { const n = document.getElementById('fs-textarea').value; if (this.editMsgIndex === -1) { script.firstMes = n; const el = document.getElementById('input-first-mes'); if(el) el.value = n; } else { save.chatHistory[this.editMsgIndex].content = n; } this.saveToLocal(); this.renderChat(); } this.editMsgIndex = null; } },
             
+            // [V78] FIX: Centered AI Message Layout
             appendChatBubble(text, role, idx, timestamp = Date.now(), customName = null) { 
                 const script = this.data.find(s => s.id === this.currentScriptId); 
-                const save = script.saves.find(s => s.id === this.currentSaveId); // Need save to know persona
+                const save = script.saves.find(s => s.id === this.currentSaveId); 
                 const isUser = role === 'user'; 
                 
-                // V67: Resolve Persona Avatar
                 let avatar = "";
                 let name = "";
                 if (isUser) {
@@ -782,7 +1328,7 @@
                     if (save && script.personas) {
                         activePersona = script.personas.find(p => p.id === save.personaId);
                     }
-                    if (!activePersona && script.personas && script.personas.length > 0) activePersona = script.personas[0]; // fallback
+                    if (!activePersona && script.personas && script.personas.length > 0) activePersona = script.personas[0]; 
                     
                     avatar = activePersona ? (activePersona.avatar || "https://api.dicebear.com/7.x/initials/svg?seed=ME") : "https://api.dicebear.com/7.x/initials/svg?seed=ME";
                     name = customName || (activePersona ? activePersona.name : "YOU");
@@ -794,16 +1340,27 @@
                 const date = new Date(timestamp); 
                 const timeStr = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`; 
                 let html = "";
-                if (isUser) { const bubbleColor = "bg-[#3d59a1]/80 backdrop-blur-md text-white"; html = `<div class="flex flex-row-reverse gap-3 group message-group animate-fade-in-up relative mb-4" id="msg-${idx}"><img src="${avatar}" class="w-8 h-8 rounded-full mt-1 shrink-0 object-cover bg-[#1a1b26]/50 border border-[#2f334d]/50"><div class="flex flex-col gap-1 max-w-[85%] items-end relative"><div class="flex items-center gap-2"><span class="text-[10px] text-[#7aa2f7] font-bold">${name}</span><div class="msg-actions relative flex gap-3 mr-2"><button onclick="App.editMessage(${idx})" class="text-sm text-gray-500 hover:text-[#ff9e64] transition-colors cursor-pointer"><i class="fa-solid fa-pencil"></i></button>${idx !== -1 ? `<button onclick="App.deleteMessage(${idx})" class="text-sm text-gray-500 hover:text-red-400 transition-colors cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div><div class="${bubbleColor} p-2 px-3 text-sm rounded-l-xl rounded-br-xl shadow-sm relative z-10 w-fit"><div class="whitespace-pre-wrap break-words">${text}</div><span class="float-right text-[9px] opacity-50 ml-2 mt-1 select-none font-mono tracking-tighter">${timeStr}</span></div></div></div>`; } 
-                else { html = `<div class="flex flex-col gap-2 group message-group animate-fade-in-up relative mb-6 w-full" id="msg-${idx}"><div class="flex items-center justify-between px-0.5"><div class="flex items-center gap-3"><img src="${avatar}" class="w-8 h-8 rounded-full object-cover bg-[#1a1b26]/50 border border-[#414868]/50 shadow-sm"><span class="text-xs text-[#ff9e64] font-bold tracking-wider uppercase">${name}</span></div><div class="msg-actions flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="App.editMessage(${idx})" class="text-xs text-gray-500 hover:text-[#ff9e64]"><i class="fa-solid fa-pencil"></i></button>${idx !== -1 ? `<button onclick="App.deleteMessage(${idx})" class="text-xs text-gray-500 hover:text-red-400"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div><div class="dynamic-text w-full prose prose-invert max-w-none"><div class="whitespace-pre-wrap break-words">${text}</div></div><div class="text-[9px] text-[#565f89] font-mono opacity-30">${timeStr}</div></div>`; }
+                if (isUser) { 
+                    const bubbleColor = "bg-[#3d59a1]/80 backdrop-blur-md text-white"; 
+                    html = `<div class="flex flex-row-reverse gap-3 group message-group animate-fade-in-up relative mb-4" id="msg-${idx}"><img src="${avatar}" class="w-8 h-8 rounded-full mt-1 shrink-0 object-cover bg-[#1a1b26]/50 border border-[#2f334d]/50"><div class="flex flex-col gap-1 max-w-[85%] items-end relative"><div class="flex items-center gap-2"><span class="text-[10px] text-[#7aa2f7] font-bold">${name}</span><div class="msg-actions relative flex gap-3 mr-2"><button onclick="App.editMessage(${idx})" class="text-sm text-gray-500 hover:text-[#ff9e64] transition-colors cursor-pointer"><i class="fa-solid fa-pencil"></i></button>${idx !== -1 ? `<button onclick="App.deleteMessage(${idx})" class="text-sm text-gray-500 hover:text-red-400 transition-colors cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div><div class="${bubbleColor} p-2 px-3 text-sm rounded-l-xl rounded-br-xl shadow-sm relative z-10 w-fit"><div class="whitespace-pre-wrap break-words">${text}</div><span class="float-right text-[9px] opacity-50 ml-2 mt-1 select-none font-mono tracking-tighter">${timeStr}</span></div></div></div>`; 
+                } else { 
+                    // [V78] AI Message Layout: Centered & Full Width for Cards
+                    html = `<div class="flex flex-col gap-2 group message-group animate-fade-in-up relative mb-6 w-full items-center" id="msg-${idx}"><div class="flex items-center justify-between w-full px-1"><div class="flex items-center gap-3"><img src="${avatar}" class="w-8 h-8 rounded-full object-cover bg-[#1a1b26]/50 border border-[#414868]/50 shadow-sm"><span class="text-xs text-[#ff9e64] font-bold tracking-wider uppercase">${name}</span></div><div class="msg-actions flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="App.editMessage(${idx})" class="text-xs text-gray-500 hover:text-[#ff9e64]"><i class="fa-solid fa-pencil"></i></button>${idx !== -1 ? `<button onclick="App.deleteMessage(${idx})" class="text-xs text-gray-500 hover:text-red-400"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div><div class="ai-content-area dynamic-text"><div class="whitespace-pre-wrap break-words w-full">${text}</div></div><div class="text-[9px] text-[#565f89] font-mono opacity-30 self-end mr-2">${timeStr}</div></div>`; 
+                }
                 document.getElementById('chat-container').insertAdjacentHTML('beforeend', html); 
             },
             updateChatHeader() { const script = this.data.find(s => s.id === this.currentScriptId); if(!script) return; document.getElementById('chat-title').innerText = script.title || "未命名"; document.getElementById('chat-header-avatar').src = script.charAvatar || "https://api.dicebear.com/7.x/adventurer/svg?seed=Gener"; },
-            sendUserMessage(contentOverride) { const i = document.getElementById('chat-input'); const t = contentOverride || i.value.trim(); if (!t || !this.currentScriptId || !this.currentSaveId) return; const script = this.data.find(s => s.id === this.currentScriptId); const save = script.saves.find(s => s.id === this.currentSaveId); 
-            save.chatHistory.push({ role: 'user', content: t, timestamp: Date.now(), customName: this.currentIdentity !== 'YOU' ? this.currentIdentity : null }); 
-            this.saveToLocal(); this.renderChat(); if(!contentOverride) i.value = ''; this.generateAIResponse(); this.updateCharCount(i); },
+            
             editMessage(idx) { const script = this.data.find(s => s.id === this.currentScriptId); const save = script.saves.find(s => s.id === this.currentSaveId); let c = idx === -1 ? script.firstMes : save.chatHistory[idx].content; this.editMsgIndex = idx; document.getElementById('fs-textarea').value = c; document.getElementById('fs-title').innerText = "正在編輯消息"; document.getElementById('fullscreen-editor').style.display = 'flex'; },
-            deleteMessage(idx) { const script = this.data.find(s => s.id === this.currentScriptId); const save = script.saves.find(s => s.id === this.currentSaveId); save.chatHistory.splice(idx, 1); this.saveToLocal(); this.renderChat(); this.showToast("已刪除"); },
+            deleteMessage(idx) { 
+                const script = this.data.find(s => s.id === this.currentScriptId); 
+                const save = script.saves.find(s => s.id === this.currentSaveId); 
+                save.chatHistory.splice(idx, 1); 
+                this.saveToLocal(); 
+                this.renderChat(); 
+                if(this.phoneOpen) this.renderPhoneChat();
+                this.showToast("已刪除"); 
+            },
             handleRawPresetUpload(i) { const f = i.files; if (!f || f.length === 0) return; let txt = ""; let c = 0; Array.from(f).forEach(file => { const r = new FileReader(); r.onload = (e) => { txt += `\n\n--- File: ${file.name} ---\n${e.target.result}`; c++; if (c === f.length) { 
                 const currentVal = document.getElementById('input-jailbreak').value;
                 const newVal = currentVal + txt;
@@ -827,7 +1384,8 @@
                     this.showToast("已加載通用模型列表"); select.value = fallback[0]; this.saveSystemSettings(); 
                 } 
             },
-            switchTab(t) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById(`nav-${t}`).classList.add('active'); ['adventure', 'system'].forEach(p => { const el = document.getElementById(`page-${p}`); if(el) el.style.display = (p === t) ? 'block' : 'none'; }); }
+            switchTab(t) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById(`nav-${t}`).classList.add('active'); ['adventure', 'system'].forEach(p => { const el = document.getElementById(`page-${p}`); if(el) el.style.display = (p === t) ? 'block' : 'none'; }); },
+
         };
         window.onload = () => App.init();
     </script>
